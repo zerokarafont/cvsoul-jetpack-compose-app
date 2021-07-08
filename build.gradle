@@ -2,7 +2,7 @@
 buildscript {
     ext {
         compose_version = '1.0.0-rc01'
-        compose_tool_version = '1.0.0-beta08'
+        compose_tool_version = '1.0.0-beta09'
         room_version = '2.3.0'
         lifecycle_version = '2.3.1'
     }
