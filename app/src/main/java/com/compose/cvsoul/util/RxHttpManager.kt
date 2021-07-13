@@ -8,5 +8,6 @@ import rxhttp.wrapper.converter.ProtoConverter
  */
 object RxHttpManager {
     @Converter(name = "ProtoBufConverter") //指定Converter名称
+    @JvmField
     var protobufConverter = ProtoConverter()
 }

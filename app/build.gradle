@@ -19,6 +19,11 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        externalNativeBuild {
+            cmake {
+                cppFlags ''
+            }
+        }
     }
 
     buildTypes {
@@ -37,6 +42,12 @@ android {
     }
     buildFeatures {
         compose true
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.20.1'
+        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
@@ -84,6 +95,9 @@ dependencies {
     implementation 'com.github.liujingxing.rxlife:rxlife-coroutine:2.1.0'
     implementation 'com.github.liujingxing.rxhttp:converter-protobuf:2.6.4'
     kapt 'com.github.liujingxing.rxhttp:rxhttp-compiler:2.6.4'
+
+    // crypto
+    implementation "com.soywiz.korlibs.krypto:krypto-android:2.2.0"
 
     // vertx
     implementation "io.vertx:vertx-core:4.1.0"
