@@ -7,6 +7,7 @@ import android.os.Build
 import com.compose.cvsoul.util.getDefaultOkHttpClient
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cahce.CacheMode
+import java.util.*
 
 class CVSoulApplication: Application() {
 
@@ -33,15 +34,13 @@ class CVSoulApplication: Application() {
             .setOnParamAssembly {
                 // 设置公共请求头
                 it
-                    .addHeader("appid", "")
                     .addHeader("version", "1.0")
                     .addHeader("platform", "android")
                     .addHeader("brand", Build.BRAND) // 手机品牌
                     .addHeader("product", Build.PRODUCT) // 手机型号
                     .addHeader("system", Build.VERSION.RELEASE) // 系统版本
-                    .addHeader("uuid", "")
-                    .addHeader("sign", "")
-                    .addHeader("timestamp", "")
+                    .addHeader("timestamp", System.currentTimeMillis().toString())
+                    .addHeader("nonce", UUID.randomUUID().toString())
             }
     }
 }

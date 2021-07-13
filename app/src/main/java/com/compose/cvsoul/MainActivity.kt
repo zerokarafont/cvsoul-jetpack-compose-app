@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.compose.cvsoul.ui.theme.CVSoulTheme
+import com.compose.cvsoul.util.crypto.JNI
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +21,12 @@ class MainActivity : ComponentActivity() {
                     Greeting("Android")
                 }
             }
+        }
+    }
+
+    companion object {
+        init {
+            System.loadLibrary("spec")
         }
     }
 }
