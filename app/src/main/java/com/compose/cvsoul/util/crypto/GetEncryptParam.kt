@@ -25,11 +25,13 @@ class GetEncryptParam(url: String) : NoBodyParam(url, Method.GET) {
             params += "$key=$value"
         }
 
-        val appKey = generateAppKey(false)
-        val sign = generateSign(params, timestamp!!, nonce!!)
+        val map = generateAppKey()
+        val rawBase64Key = map["rawBase64Key"]
+        val encryptAppKey = map["encryptAppKey"]
+        val sign = generateSign(params, timestamp!!, nonce!!, rawBase64Key!!)
 
         addHeader("sign", sign)
-        addHeader("appKey", appKey)
+        addHeader("appKey", encryptAppKey)
 
         return if (params.isEmpty()) simpleUrl.toHttpUrl() else "$simpleUrl?$params".toHttpUrl()
     }

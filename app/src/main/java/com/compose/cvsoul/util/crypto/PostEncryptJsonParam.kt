@@ -20,11 +20,13 @@ class PostEncryptJsonParam(url: String) : JsonParam(url, Method.POST) {
         val timestamp = headers["timestamp"]
         val nonce = headers["nonce"]
 
-        val appKey = generateAppKey(false)
-        val sign = generateSign(json, timestamp!!, nonce!!)
+        val map = generateAppKey()
+        val rawBase64Key = map["rawBase64Key"]
+        val encryptAppKey = map["encryptAppKey"]
+        val sign = generateSign(json, timestamp!!, nonce!!, rawBase64Key!!)
 
         addHeader("sign", sign)
-        addHeader("appKey", appKey)
+        addHeader("appKey", encryptAppKey)
 
         return json.toRequestBody(MEDIA_TYPE_JSON)
     }

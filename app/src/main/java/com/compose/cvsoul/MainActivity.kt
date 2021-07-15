@@ -3,13 +3,18 @@ package com.compose.cvsoul
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.compose.cvsoul.ui.theme.CVSoulTheme
-import com.compose.cvsoul.util.crypto.JNI
+import com.compose.cvsoul.viewmodel.TestViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +37,17 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun Greeting(name: String, viewModel: TestViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    
+    val scope = rememberCoroutineScope()
+
+    Button(onClick = {
+        scope.launch {
+            viewModel.test()
+        }
+    }) {
+        Text(text = "Hello")
+    }
 }
 
 @Preview(showBackground = true)

@@ -9,5 +9,5 @@ import rxhttp.wrapper.annotation.Domain
 object RxHttpUrl {
     @DefaultDomain
     @JvmField
-    val baseUrl = ""
+    val baseUrl = "http://192.168.0.102:9000"
 }

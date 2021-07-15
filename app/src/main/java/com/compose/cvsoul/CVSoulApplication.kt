@@ -26,7 +26,7 @@ class CVSoulApplication: Application() {
             //是否开启调试模式，开启后，logcat过滤RxHttp，即可看到整个请求流程日志
             .setDebug(true)
             //设置最大缓存为10M，缓存有效时长为24小时
-            .setCache(externalCacheDir, 10 * 1024 * 1024, CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK, 24 * 60 * 60 * 1000)
+//            .setCache(externalCacheDir, 10 * 1024 * 1024, CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK, 24 * 60 * 60 * 1000)
             //设置一些key，不参与cacheKey的组拼
 //            .setExcludeCacheKeys(String...)
             //设置数据解密/解码器

@@ -7,7 +7,7 @@ import rxhttp.wrapper.utils.convertTo
 import java.io.IOException
 import java.lang.reflect.Type
 
-data class Response<T>(val code: Int = 0, val msg: String? = null, val data: T? = null)
+data class Response<T>(val statusCode: Int = 0, val msg: String? = null, val data: T? = null)
 data class PageList<T>(val curPage: Int = 0, val pageCount: Int = 0, val total: Int = 0, val list: List<T>? = null)
 
 @Parser(name = "Response", wrappers = [List::class, PageList::class])
@@ -29,8 +29,8 @@ open class ResponseParser<T> : TypeParser<T> {
             @Suppress("UNCHECKED_CAST")
             t = data.msg as T
         }
-        if (data.code != 200 || t == null) { //code不等于0，说明数据不正确，抛出异常
-            throw ParseException(data.code.toString(), data.msg, response)
+        if (data.statusCode != 200 || t == null) { //code不等于0，说明数据不正确，抛出异常
+            throw ParseException(data.statusCode.toString(), data.msg, response)
         }
         return t
     }
