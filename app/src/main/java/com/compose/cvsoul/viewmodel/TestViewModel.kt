@@ -11,7 +11,7 @@ class TestViewModel : ViewModel() {
         rxLifeScope.launch {
             RxHttp
                 .getEncrypt("/rest/one")
-                .addQuery("age", 2)
+                .addQuery("age", 1)
                 .toResponse<String>()
                 .await()
         }
