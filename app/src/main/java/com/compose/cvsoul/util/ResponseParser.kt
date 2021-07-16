@@ -1,5 +1,8 @@
 package com.compose.cvsoul.util
 
+import android.content.Context
+import com.compose.cvsoul.CVSoulApplication
+import com.compose.cvsoul.util.crypto.*
 import rxhttp.wrapper.annotation.Parser
 import rxhttp.wrapper.exception.ParseException
 import rxhttp.wrapper.parse.TypeParser
@@ -18,6 +21,26 @@ open class ResponseParser<T> : TypeParser<T> {
 
     @Throws(IOException::class)
     override fun onParse(response: okhttp3.Response): T {
+        val sessionId = response.header("sessionId")
+        if (sessionId.isNullOrEmpty()) {
+            throw Exception("sessionId不能为空")
+        }
+
+        if (getSessionId().isNullOrEmpty()) {
+            // 如果是第一次建立会话, 直接存入新的sessionId
+            setSessionId(sessionId)
+        }else if (sessionId == "expired") {
+            // 客户端识别到 expired 更新密钥, 告诉服务器密钥已更新, 需要服务器生成新的sessionId
+            setSessionId("update")
+
+            val newKey = generateRawBase64Key()
+            // 覆盖掉原来的key
+            setRawBase64Key(newKey)
+        } else if (getSessionId() != sessionId) {
+            // 收到新的sessionId, 覆写存入新的sessionId
+            setSessionId(sessionId)
+        }
+
         val data: Response<T> = response.convertTo(Response::class, *types)
         var t = data.data
         if (t == null && types[0] === String::class.java) {
@@ -29,9 +52,15 @@ open class ResponseParser<T> : TypeParser<T> {
             @Suppress("UNCHECKED_CAST")
             t = data.msg as T
         }
-        if (data.statusCode != 200 || t == null) { //code不等于0，说明数据不正确，抛出异常
+        if (data.statusCode == 401) {
+            // TODO: 重定向到登录页
+
+        }
+        if ((data.statusCode != 200 && data.statusCode != 401) || t == null) {
+            //code不等于0，说明数据不正确，抛出异常
             throw ParseException(data.statusCode.toString(), data.msg, response)
         }
+
         return t
     }
 }

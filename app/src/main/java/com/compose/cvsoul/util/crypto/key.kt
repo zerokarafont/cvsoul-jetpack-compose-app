@@ -21,31 +21,59 @@ import javax.crypto.spec.SecretKeySpec
 const val PUBLIC_KEY =
     "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrWFdcvgt+q4NOO2kcXH7zu9Ermd7/dNbgzXWbXOjkuMTCVKgkrsWK4tsIFuuSVbteW8h64WnTR27jAqbQQUmn60Hxi2/cwvHm9XtbBgizw4okdND5w5cYYtcga2FIboe6zDOUNqIl10PPdIS4ub0939htyTgvyBEjuDzbWaDlQwIDAQAB"
 
-fun generateAppKey(): Map<String, String> {
-    val prefs = CVSoulApplication.context.getSharedPreferences("key", Context.MODE_PRIVATE)
-    // 获取已存在的aesKey
-    var key = prefs.getString("key", "")
-    if (key.isNullOrEmpty()) {
-        val editor = prefs.edit()
-        // 如果aeskey不存在或者为空字符串， 则生成一个新的key
-        val keyGen = KeyGenerator.getInstance("AES")
-        keyGen.init(128, SecureRandom())
-        val newKey =  keyGen.generateKey().encoded
+/**
+ * 持久化存储原始key
+ */
+fun setRawBase64Key(rawBase64Key: String) {
+    val prefs = CVSoulApplication.context.getSharedPreferences("cache", Context.MODE_PRIVATE)
+    val editor = prefs.edit()
 
-        key = newKey.base64
-
-        editor.putString("key", key)
-        editor.apply()
-    }
-
-    val encryptAppKey = Base64.encode(RSA.encryptMessage(key, PUBLIC_KEY).toByteArray(Charset.forName("UTF-8")))
-
-    return mapOf<String, String>(
-        "rawBase64Key" to key,
-        "encryptAppKey" to encryptAppKey
-    )
+    editor.putString("key", rawBase64Key)
+    editor.apply()
 }
 
+/**
+ * 获取原始key
+ */
+fun getRawBase64Key(): String? {
+    val prefs = CVSoulApplication.context.getSharedPreferences("cache", Context.MODE_PRIVATE)
+
+    return prefs.getString("key", "")
+}
+
+/**
+ * 清除原始key
+ */
+fun removeRawBase64Key() {
+    val prefs = CVSoulApplication.context.getSharedPreferences("cache", Context.MODE_PRIVATE)
+    val editor = prefs.edit()
+    editor.remove("key")
+    editor.apply()
+}
+
+/**
+ * 生成原始key
+ */
+fun generateRawBase64Key(): String {
+    val keyGen = KeyGenerator.getInstance("AES")
+    keyGen.init(128, SecureRandom())
+    val newKey =  keyGen.generateKey().encoded
+
+    return newKey.base64
+}
+
+/**
+ * 生成加密key
+ */
+fun generateAppKey(rawBase64Key: String): String {
+    val encryptAppKey = Base64.encode(RSA.encryptMessage(rawBase64Key, PUBLIC_KEY).toByteArray(Charset.forName("UTF-8")))
+
+    return encryptAppKey
+}
+
+/**
+ * 生成请求签名
+ */
 fun generateSign(requestData: String, timestamp: String, nonce: String, rawBase64Key: String): String {
 
     // 生成随机特征码

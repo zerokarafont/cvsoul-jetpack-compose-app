@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import com.compose.cvsoul.util.crypto.getSessionId
 import com.compose.cvsoul.util.getDefaultOkHttpClient
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cahce.CacheMode
@@ -32,6 +33,7 @@ class CVSoulApplication: Application() {
             //设置数据解密/解码器
 //            .setResultDecoder(Function)
             .setOnParamAssembly {
+                val sessionId = getSessionId()
                 // 设置公共请求头
                 it
                     .addHeader("version", "1.0")
@@ -41,6 +43,7 @@ class CVSoulApplication: Application() {
                     .addHeader("system", Build.VERSION.RELEASE) // 系统版本
                     .addHeader("timestamp", System.currentTimeMillis().toString())
                     .addHeader("nonce", UUID.randomUUID().toString())
+                    .addHeader("sessionId", sessionId)
             }
     }
 }
