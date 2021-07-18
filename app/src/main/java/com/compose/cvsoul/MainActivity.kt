@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -41,12 +42,21 @@ fun Greeting(name: String, viewModel: TestViewModel = androidx.lifecycle.viewmod
     
     val scope = rememberCoroutineScope()
 
-    Button(onClick = {
-        scope.launch {
-            viewModel.test()
+    Column {
+        Button(onClick = {
+            scope.launch {
+                viewModel.testLogin()
+            }
+        }) {
+            Text(text = "测试post")
         }
-    }) {
-        Text(text = "Hello")
+        Button(onClick = {
+            scope.launch {
+                viewModel.testGet()
+            }
+        }) {
+            Text(text = "测试get")
+        }
     }
 }
 

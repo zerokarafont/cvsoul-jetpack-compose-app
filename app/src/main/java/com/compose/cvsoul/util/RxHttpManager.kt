@@ -1,6 +1,7 @@
 package com.compose.cvsoul.util
 
 import rxhttp.wrapper.annotation.Converter
+import rxhttp.wrapper.converter.GsonConverter
 import rxhttp.wrapper.converter.ProtoConverter
 
 /**

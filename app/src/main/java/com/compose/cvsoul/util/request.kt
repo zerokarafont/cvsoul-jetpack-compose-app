@@ -1,7 +1,6 @@
 package com.compose.cvsoul.util
 
 import okhttp3.OkHttpClient
-import rxhttp.wrapper.ssl.HttpsUtils
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSession

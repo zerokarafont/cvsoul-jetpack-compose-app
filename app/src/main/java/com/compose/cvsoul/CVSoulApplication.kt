@@ -4,10 +4,19 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.util.Log
+import com.compose.cvsoul.util.Response
+import com.compose.cvsoul.util.ResponseParser
+import com.compose.cvsoul.util.crypto.getRawBase64Key
 import com.compose.cvsoul.util.crypto.getSessionId
+import com.compose.cvsoul.util.crypto.getToken
 import com.compose.cvsoul.util.getDefaultOkHttpClient
+import com.soywiz.krypto.AES
+import com.soywiz.krypto.Padding
+import com.soywiz.krypto.encoding.Base64
 import rxhttp.RxHttpPlugins
-import rxhttp.wrapper.cahce.CacheMode
+import rxhttp.wrapper.converter.GsonConverter
+import rxhttp.wrapper.utils.GsonUtil
 import java.util.*
 
 class CVSoulApplication: Application() {
@@ -31,9 +40,17 @@ class CVSoulApplication: Application() {
             //设置一些key，不参与cacheKey的组拼
 //            .setExcludeCacheKeys(String...)
             //设置数据解密/解码器
-//            .setResultDecoder(Function)
+            .setResultDecoder { encryptData ->
+                Log.d("debug", "decoderData: $encryptData")
+                val response = GsonUtil.fromJson<Response<String>>(encryptData, Response::class.java)
+                val key = getRawBase64Key()?.let { Base64.decode(it) }
+                val data = String(AES.decryptAes128Cbc(Base64.decode(response.data!!), key!!, Padding.PKCS7Padding))
+                response.data = data
+                GsonUtil.toJson(response)
+            }
             .setOnParamAssembly {
                 val sessionId = getSessionId()
+                val token = getToken()
                 // 设置公共请求头
                 it
                     .addHeader("version", "1.0")
@@ -44,6 +61,7 @@ class CVSoulApplication: Application() {
                     .addHeader("timestamp", System.currentTimeMillis().toString())
                     .addHeader("nonce", UUID.randomUUID().toString())
                     .addHeader("sessionId", sessionId)
+                    .addHeader("Authorization", "Bearer $token")
             }
     }
 }

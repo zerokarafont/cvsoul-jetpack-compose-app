@@ -30,8 +30,6 @@ class GetEncryptParam(url: String) : NoBodyParam(url, Method.GET) {
         val encryptAppKey = generateAppKey(rawBase64Key!!)
         val sign = generateSign(params, timestamp!!, nonce!!, rawBase64Key)
 
-        Log.d("debug","rawBase64key: $rawBase64Key")
-
         addHeader("sign", sign)
         addHeader("appKey", encryptAppKey)
 
