@@ -43,4 +43,21 @@ class TestViewModel : ViewModel() {
             Log.d("debug", "token: $resp")
         }
     }
+
+    suspend fun testRegister() {
+        val key = getRawBase64Key()
+        val password = AES.encryptAes128Cbc("123456".toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
+
+        rxLifeScope.launch {
+            val resp = RxHttp
+                .postEncryptJson("/auth/register")
+                .setDecoderEnabled(false)
+                .add("username", "magics")
+                .add("password", password)
+                .add("code", "FDdfv4=dfas1a")
+                .toResponse<String>()
+                .await()
+            Log.d("debug", "register: $resp")
+        }
+    }
 }

@@ -48,7 +48,7 @@ fun Greeting(name: String, viewModel: TestViewModel = androidx.lifecycle.viewmod
                 viewModel.testLogin()
             }
         }) {
-            Text(text = "测试post")
+            Text(text = "测试登录")
         }
         Button(onClick = {
             scope.launch {
@@ -56,6 +56,13 @@ fun Greeting(name: String, viewModel: TestViewModel = androidx.lifecycle.viewmod
             }
         }) {
             Text(text = "测试get")
+        }
+        Button(onClick = {
+            scope.launch {
+                viewModel.testRegister()
+            }
+        }) {
+            Text(text = "测试注册")
         }
     }
 }

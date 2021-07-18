@@ -21,6 +21,7 @@ fun register(username: String, password: String, code: String) = liveData<String
     val encryptPass = AES.encryptAes128Cbc(password.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
     RxHttp
         .postEncryptJson("/auth/register")
+        .setDecoderEnabled(false)
         .add("username", username)
         .add("password", encryptPass)
         .add("code", code)
