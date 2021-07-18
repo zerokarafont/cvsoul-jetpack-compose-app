@@ -41,7 +41,6 @@ class CVSoulApplication: Application() {
 //            .setExcludeCacheKeys(String...)
             //设置数据解密/解码器
             .setResultDecoder { encryptData ->
-                Log.d("debug", "decoderData: $encryptData")
                 val response = GsonUtil.fromJson<Response<String>>(encryptData, Response::class.java)
                 val key = getRawBase64Key()?.let { Base64.decode(it) }
                 val data = String(AES.decryptAes128Cbc(Base64.decode(response.data!!), key!!, Padding.PKCS7Padding))

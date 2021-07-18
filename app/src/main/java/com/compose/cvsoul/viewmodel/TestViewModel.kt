@@ -3,15 +3,11 @@ package com.compose.cvsoul.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.rxLifeScope
-import com.compose.cvsoul.util.Response
 import com.compose.cvsoul.util.crypto.getRawBase64Key
-import com.google.gson.reflect.TypeToken
-import com.rxlife.coroutine.RxLifeScope
 import com.soywiz.krypto.AES
 import com.soywiz.krypto.Padding
 import com.soywiz.krypto.encoding.Base64
 import com.soywiz.krypto.encoding.base64
-import io.vertx.core.json.Json
 import rxhttp.map
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toResponse
@@ -25,7 +21,9 @@ class TestViewModel : ViewModel() {
                 .setDecoderEnabled(true)
                 .addQuery("age", 1)
                 .toResponse<String>()
-                .map { GsonUtil.fromJson<List<String>>(it, List::class.java) }
+                .map {
+                    GsonUtil.fromJson<List<String>>(it, List::class.java)
+                }
                 .await()
             Log.d("debug", "getData: ${resp[0]}")
         }
