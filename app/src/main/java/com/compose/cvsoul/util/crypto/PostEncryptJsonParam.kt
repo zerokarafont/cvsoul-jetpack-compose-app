@@ -1,6 +1,5 @@
 package com.compose.cvsoul.util.crypto
 
-import android.util.Log
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody

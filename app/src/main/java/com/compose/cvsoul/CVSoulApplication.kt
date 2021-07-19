@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import com.compose.cvsoul.util.Response
-import com.compose.cvsoul.util.ResponseParser
 import com.compose.cvsoul.util.crypto.getRawBase64Key
 import com.compose.cvsoul.util.crypto.getSessionId
 import com.compose.cvsoul.util.crypto.getToken
@@ -15,7 +13,6 @@ import com.soywiz.krypto.AES
 import com.soywiz.krypto.Padding
 import com.soywiz.krypto.encoding.Base64
 import rxhttp.RxHttpPlugins
-import rxhttp.wrapper.converter.GsonConverter
 import rxhttp.wrapper.utils.GsonUtil
 import java.util.*
 

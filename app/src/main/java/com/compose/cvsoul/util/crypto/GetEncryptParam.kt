@@ -1,6 +1,5 @@
 package com.compose.cvsoul.util.crypto
 
-import android.util.Log
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import rxhttp.wrapper.annotation.Param
