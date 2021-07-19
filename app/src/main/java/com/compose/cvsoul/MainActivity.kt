@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.compose.cvsoul.ui.component.CustomBottomNavigation
 import com.compose.cvsoul.ui.screen.HomeScreen
 import com.compose.cvsoul.ui.screen.MessageScreen
 import com.compose.cvsoul.ui.theme.CVSoulTheme
@@ -23,8 +24,6 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             CVSoulTheme {
-                var selectedItem by remember { mutableStateOf(0) }
-                val items = listOf("主页", "消息")
                 val navController = rememberNavController()
                 Scaffold(
                     drawerContent = {
@@ -33,22 +32,11 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         Text(text = "Top")
                     },
-                    bottomBar = {
-                        BottomNavigation {
-                            items.forEachIndexed { index, item ->
-                                BottomNavigationItem(
-                                    icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                                    label = { Text(item) },
-                                    selected = selectedItem == index,
-                                    onClick = { selectedItem = index }
-                                )
-                            }
-                        }
-                    }
+                    bottomBar = { CustomBottomNavigation(navController = navController) }
                 ) {
                     NavHost(navController = navController, startDestination = "home") {
                         composable(route = "home") { HomeScreen(navController = navController) }
-                        composable(route = "message") { MessageScreen(navController = navController) }
+                        composable(route = "person") { MessageScreen(navController = navController) }
                     }
                 }
             }
