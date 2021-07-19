@@ -5,6 +5,7 @@ buildscript {
         compose_tool_version = '1.0.0-beta09'
         room_version = '2.3.0'
         lifecycle_version = '2.3.1'
+        paging_version = '3.0.0'
     }
     repositories {
         google()

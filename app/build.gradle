@@ -89,6 +89,10 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    // paging
+    implementation "androidx.paging:paging-runtime:$paging_version"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha11"
+
     // network
     implementation 'com.github.liujingxing.rxhttp:rxhttp:2.6.4'
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'

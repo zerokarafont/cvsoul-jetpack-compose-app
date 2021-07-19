@@ -2,6 +2,7 @@ package com.compose.cvsoul.repository.service
 
 import androidx.lifecycle.liveData
 import com.compose.cvsoul.util.crypto.getRawBase64Key
+import com.compose.cvsoul.util.crypto.setToken
 import com.soywiz.krypto.AES
 import com.soywiz.krypto.Padding
 import com.soywiz.krypto.encoding.Base64
@@ -38,10 +39,11 @@ fun register(username: String, password: String, code: String) = liveData<String
 fun login(username: String, password: String) = liveData<String>(Dispatchers.IO) {
     val key = getRawBase64Key()
     val encryptPass = AES.encryptAes128Cbc(password.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
-    RxHttp
+    val token = RxHttp
         .postEncryptJson("/auth/login")
         .add("username", username)
         .add("password", encryptPass)
         .toResponse<String>()
         .await()
+    setToken(token)
 }

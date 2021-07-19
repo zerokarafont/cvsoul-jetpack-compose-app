@@ -36,7 +36,7 @@ class TestViewModel : ViewModel() {
         rxLifeScope.launch {
             val resp = RxHttp
                 .postEncryptJson("/auth/login")
-                .add("username", "admin")
+                .add("username", "magic")
                 .add("password", password)
                 .toResponse<String>()
                 .await()
