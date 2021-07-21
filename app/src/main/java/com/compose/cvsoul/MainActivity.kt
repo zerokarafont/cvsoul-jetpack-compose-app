@@ -3,20 +3,26 @@ package com.compose.cvsoul
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.compose.cvsoul.ui.component.CustomBottomNavigation
+import com.compose.cvsoul.ui.component.CustomTopAppBar
+import com.compose.cvsoul.ui.component.Search
 import com.compose.cvsoul.ui.screen.HomeScreen
+import com.compose.cvsoul.ui.screen.MainScreen
 import com.compose.cvsoul.ui.screen.MessageScreen
+import com.compose.cvsoul.ui.screen.SearchScreen
 import com.compose.cvsoul.ui.theme.CVSoulTheme
+import com.compose.cvsoul.viewmodel.TestViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,21 +30,14 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             CVSoulTheme {
-                val navController = rememberNavController()
-                Scaffold(
-                    drawerContent = {
-                        Text(text = "测试哦")
-                    },
-                    topBar = {
-                        Text(text = "Top")
-                    },
-                    bottomBar = { CustomBottomNavigation(navController = navController) }
-                ) {
-                    NavHost(navController = navController, startDestination = "home") {
-                        composable(route = "home") { HomeScreen(navController = navController) }
-                        composable(route = "person") { MessageScreen(navController = navController) }
+                    val navController = rememberNavController()
+
+                    NavHost(navController = navController, startDestination = "main", route = "root") {
+                        composable(route = "main") {
+                            MainScreen(navController = navController)
+                        }
+                        composable(route = "search") { SearchScreen(navController = navController) }
                     }
-                }
             }
         }
     }
