@@ -6,22 +6,19 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.compose.cvsoul.ui.component.CustomBottomNavigation
 import com.compose.cvsoul.ui.component.CustomTopAppBar
-import com.compose.cvsoul.viewmodel.TestViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
+    val mainNavController = rememberNavController()
 
     fun handleOpenDrawer() {
         scope.launch {
@@ -37,17 +34,15 @@ fun MainScreen(navController: NavHostController) {
             Text(text = "测试哦")
         },
         topBar = { CustomTopAppBar(navController = navController, onExpand = { handleOpenDrawer() }) },
-        bottomBar = { CustomBottomNavigation(navController = navController) }
+        bottomBar = { CustomBottomNavigation(navController = mainNavController) }
     ) {
-        NavHost(navController = navController, startDestination = "main") {
-            navigation(startDestination = "home", route = "main") {
+        NavHost(navController = mainNavController, startDestination = "home") {
                 composable(route = "home") {
                     HomeScreen(navController = navController)
                 }
                 composable(route = "person") {
                     MessageScreen(navController = navController)
                 }
-            }
         }
     }
 }
