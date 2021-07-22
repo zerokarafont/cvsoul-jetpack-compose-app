@@ -1,7 +1,6 @@
 package com.compose.cvsoul.ui.screen
 
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -12,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.compose.cvsoul.ui.component.CustomBottomNavigation
 import com.compose.cvsoul.ui.component.CustomTopAppBar
+import com.compose.cvsoul.ui.component.Profile
 import kotlinx.coroutines.launch
 
 @Composable
@@ -28,13 +28,11 @@ fun MainScreen(navController: NavHostController) {
 
     Scaffold(
         scaffoldState = scaffoldState,
-        drawerGesturesEnabled = false,
+        drawerGesturesEnabled = true,
         backgroundColor = Color(0xFFEEEEEE),
-        drawerContent = {
-            Text(text = "测试哦")
-        },
+        drawerContent = { Profile() },
         topBar = { CustomTopAppBar(navController = navController, onExpand = { handleOpenDrawer() }) },
-        bottomBar = { CustomBottomNavigation(navController = mainNavController) }
+        bottomBar = { CustomBottomNavigation(navController = mainNavController) },
     ) {
         NavHost(navController = mainNavController, startDestination = "home") {
                 composable(route = "home") {

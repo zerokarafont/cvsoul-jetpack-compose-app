@@ -42,10 +42,11 @@ fun Search(onSearch: (input: String) -> Unit, onTap: () -> Unit, initIsFocus: Bo
         focusManager.clearFocus()
     }
 
-    LaunchedEffect(Unit) {
+    DisposableEffect(Unit) {
         if (initIsFocus) {
-           focusRequester.requestFocus()
+            focusRequester.requestFocus()
         }
+        onDispose {  }
     }
 
     LaunchedEffect(isFocused) {
