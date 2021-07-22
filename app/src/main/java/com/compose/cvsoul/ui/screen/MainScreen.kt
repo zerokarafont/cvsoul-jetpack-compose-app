@@ -30,7 +30,7 @@ fun MainScreen(navController: NavHostController) {
         scaffoldState = scaffoldState,
         drawerGesturesEnabled = true,
         backgroundColor = Color(0xFFEEEEEE),
-        drawerContent = { Profile() },
+        drawerContent = { Profile(navController = navController) },
         topBar = { CustomTopAppBar(navController = navController, onExpand = { handleOpenDrawer() }) },
         bottomBar = { CustomBottomNavigation(navController = mainNavController) },
     ) {

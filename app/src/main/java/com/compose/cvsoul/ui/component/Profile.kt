@@ -26,10 +26,10 @@ import com.compose.cvsoul.repository.model.UserModel
 import com.compose.cvsoul.util.crypto.getToken
 
 @Composable
-fun Profile(navController: NavController? = null) {
+fun Profile(navController: NavController) {
 
     fun handleNavigate(route: String) {
-        navController?.navigate(route = route)
+        navController.navigate(route = route)
     }
 
     fun checkIsAlreadyLogin(): Boolean {
@@ -42,7 +42,7 @@ fun Profile(navController: NavController? = null) {
         Column(
             modifier = Modifier.padding(14.dp)
         ) {
-            AvatarItem()
+            AvatarItem(onClick = { handleNavigate("auth") })
             Spacer(modifier = Modifier.height(20.dp))
             ProfileItem(text = "我的收藏", icon = Icons.Filled.Star, route = "star", onClick = { it -> handleNavigate(it) })
             ProfileItem(text = "关于", icon = Icons.Filled.Info, route = "about", onClick = { it -> handleNavigate(it) })
@@ -55,7 +55,12 @@ fun Profile(navController: NavController? = null) {
 }
 
 @Composable
-fun AvatarItem(userInfo: UserModel? = null) {
+fun AvatarItem(userInfo: UserModel? = null, onClick: () -> Unit) {
+
+    fun handleLogin() {
+        onClick()
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -72,7 +77,7 @@ fun AvatarItem(userInfo: UserModel? = null) {
         }
         Spacer(modifier = Modifier.width(20.dp))
         if (userInfo == null) {
-            Row(Modifier.clickable {  }) {
+            Row(Modifier.clickable { handleLogin() }) {
                 Text(text = "立即登录")
                 Image(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
             }
@@ -121,8 +126,8 @@ fun LogoutItem() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    Profile()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfilePreview() {
+//    Profile()
+//}
