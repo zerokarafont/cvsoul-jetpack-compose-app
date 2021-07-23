@@ -15,16 +15,19 @@ import rxhttp.wrapper.param.toResponse
  * 注册
  * @param username 用户名
  * @param password 密码
+ * @param confirmPass 确认密码
  * @param code 邀请码
  */
-fun register(username: String, password: String, code: String) = liveData<String>(Dispatchers.IO) {
+fun register(username: String, password: String, confirmPass: String, code: String) = liveData<String>(Dispatchers.IO) {
     val key = getRawBase64Key()
     val encryptPass = AES.encryptAes128Cbc(password.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
+    val encryptConfirmPass = AES.encryptAes128Cbc(confirmPass.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
     RxHttp
         .postEncryptJson("/auth/register")
         .setDecoderEnabled(false)
         .add("username", username)
         .add("password", encryptPass)
+        .add("confirmPass", encryptConfirmPass)
         .add("code", code)
         .toResponse<String>()
         .await()
