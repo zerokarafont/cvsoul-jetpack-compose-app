@@ -1,24 +1,22 @@
 package com.compose.cvsoul.ui.screen
 
-import android.text.Layout
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.compose.cvsoul.MainActivity
-import com.compose.cvsoul.repository.service.login
-import com.compose.cvsoul.repository.service.register
+import com.compose.cvsoul.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 enum class AuthAction(value: String) {
@@ -28,15 +26,25 @@ enum class AuthAction(value: String) {
 
 @Composable
 fun AuthScreen(navController: NavController) {
+    val viewModel = AuthViewModel()
+    val isLoading = viewModel.isLoading.observeAsState().value
+    val isLoginSuccess = viewModel.isLoginSuccess.observeAsState().value
+
     var action      by remember { mutableStateOf("LOGIN") }
     var username    by remember { mutableStateOf("") }
     var password    by remember { mutableStateOf("") }
     var confirmPass by remember { mutableStateOf("") }
     var code        by remember { mutableStateOf("") }
-    var isLoading   by remember { mutableStateOf(false) }
-
-    val snackbarHostState = remember { SnackbarHostState() }
+    
     val scope = rememberCoroutineScope()
+
+    DisposableEffect(isLoginSuccess) {
+        if (isLoginSuccess == true) {
+            navController.navigate(route = "main")
+        }
+
+        onDispose {  }
+    }
 
     val isFormValid by remember(username, password, confirmPass, code) {
         derivedStateOf {
@@ -48,26 +56,15 @@ fun AuthScreen(navController: NavController) {
         }
     }
 
-    Log.d("debug", "isLoading: $isLoading")
-
     suspend fun handleRegister() {
         if (password != confirmPass) { throw Exception("输入密码不一致") }
-        snackbarHostState.showSnackbar(message = "正在注册...")
-        isLoading = true
-        register(username, password, confirmPass, code).observe(MainActivity()) { data ->
-            Log.d("debug", "register: $data")
-            isLoading = false
-        }
+        viewModel.register(username, password, confirmPass, code)
     }
 
-    suspend fun handleLogin() {
-        isLoading = true
-        snackbarHostState.showSnackbar(message = "正在登录...")
-        login(username, password).observe(MainActivity()) { data ->
-            Log.d("debug", "login: $data")
-            isLoading = false
-        }
-    }
+      suspend fun handleLogin() {
+         viewModel.login(username, password)
+     }
+
 
     @Composable
     fun RegisterPage() {
@@ -111,7 +108,7 @@ fun AuthScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
             Button(
-                enabled = isFormValid && !isLoading,
+                enabled = isFormValid && !isLoading!!,
                 onClick = { scope.launch { handleRegister() } }
             ) {
                 Text(text = "注册")
@@ -158,7 +155,7 @@ fun AuthScreen(navController: NavController) {
                 Text(text = "注册")
             }
             Button(
-                enabled = isFormValid && !isLoading,
+                enabled = isFormValid && !isLoading!!,
                 onClick = { scope.launch { handleLogin() } }
             ) {
                 Text(text = "登录")
@@ -184,6 +181,18 @@ fun AuthScreen(navController: NavController) {
                 AuthAction.REGISTER.name -> RegisterPage()
             }
         }
-        SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.Center))
+    }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Transparent)
+            .clickable(
+                enabled = false,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {}
+    ) {
+        CircularProgressIndicator()
     }
 }

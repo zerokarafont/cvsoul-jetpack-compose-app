@@ -72,6 +72,17 @@ fun generateAppKey(rawBase64Key: String): String {
 }
 
 /**
+ * 先从缓存中获取key, 如果不存在则生成一个新的key
+ */
+fun getRawBase64KeyFromCacheOrOtherwiseNew(): String? {
+    if (getRawBase64Key().isNullOrEmpty()) {
+        val initKey = generateRawBase64Key()
+        setRawBase64Key(initKey)
+    }
+    return getRawBase64Key()
+}
+
+/**
  * 生成请求签名
  */
 fun generateSign(requestData: String, timestamp: String, nonce: String, rawBase64Key: String): String {

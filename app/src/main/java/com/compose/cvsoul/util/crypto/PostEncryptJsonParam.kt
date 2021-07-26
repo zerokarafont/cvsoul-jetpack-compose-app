@@ -20,12 +20,7 @@ class PostEncryptJsonParam(url: String) : JsonParam(url, Method.POST) {
         val timestamp = headers["timestamp"]
         val nonce = headers["nonce"]
 
-        // 先从缓存中获取key, 如果不存在则生成一个新的key
-        if (getRawBase64Key().isNullOrEmpty()) {
-            val initKey = generateRawBase64Key()
-            setRawBase64Key(initKey)
-        }
-        val rawBase64Key = getRawBase64Key()
+        val rawBase64Key = getRawBase64KeyFromCacheOrOtherwiseNew()
         val encryptAppKey = generateAppKey(rawBase64Key!!)
         val sign = generateSign(json, timestamp!!, nonce!!, rawBase64Key)
 
