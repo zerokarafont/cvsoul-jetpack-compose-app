@@ -1,6 +1,8 @@
 package com.compose.cvsoul.ui.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
@@ -40,10 +42,14 @@ fun CustomBottomNavigation(navController: NavController) {
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-                    .clickable {
-                        selectedItem = index
-                        navController.navigate(route = icon["iconName"]!!)
-                    }
+                    .clickable(
+                        indication = null,
+                        interactionSource = MutableInteractionSource(),
+                        onClick = {
+                            selectedItem = index
+                            navController.navigate(route = icon["iconName"]!!)
+                        }
+                    )
             ) {
                 when(icon["iconName"]) {
                     "home" -> {

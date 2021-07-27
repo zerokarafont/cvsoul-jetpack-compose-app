@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
             CVSoulTheme {
                     val navController = rememberNavController()
 
-                    NavHost(navController = navController, startDestination = "auth", route = "root") {
+                    NavHost(navController = navController, startDestination = "main", route = "root") {
                         composable(route = "main") {
                             MainScreen(navController = navController)
                         }

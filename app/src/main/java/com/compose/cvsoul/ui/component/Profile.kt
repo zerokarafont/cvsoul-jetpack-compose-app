@@ -1,6 +1,7 @@
 package com.compose.cvsoul.ui.component
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -98,9 +99,11 @@ fun ProfileItem(text: String, icon: ImageVector, route: String, onClick: (dest: 
             .height(45.dp)
             .background(Color.White)
             .padding(horizontal = 10.dp)
-            .clickable {
-                onClick(route)
-            }
+            .clickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+                onClick = { onClick(route) }
+            )
     ) {
         Image(imageVector = icon, contentDescription = null)
         Spacer(modifier = Modifier.width(20.dp))
