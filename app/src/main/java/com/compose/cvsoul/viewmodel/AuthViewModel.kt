@@ -1,5 +1,6 @@
 package com.compose.cvsoul.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.rxLifeScope
@@ -8,21 +9,26 @@ import com.compose.cvsoul.util.crypto.setToken
 import com.compose.cvsoul.util.toast
 
 class AuthViewModel: ViewModel() {
-    val isLoading      = MutableLiveData(false)
-    val isLoginSuccess = MutableLiveData(false)
+    private val _isLoading         = MutableLiveData(false)
+    private val _isLoginSuccess    = MutableLiveData(false)
+    private val _isRegisterSuccess = MutableLiveData(false)
+
+    val isLoading:         LiveData<Boolean> = _isLoading
+    val isLoginSuccess:    LiveData<Boolean> = _isLoginSuccess
+    val isRegisterSuccess: LiveData<Boolean> = _isRegisterSuccess
 
     suspend fun login(username: String, password: String) {
         rxLifeScope.launch({
             val token = AuthService.login(username, password)
             setToken(token)
             toast("登录成功")
-            isLoginSuccess.value = true
+            _isLoginSuccess.value = true
         }, {
             toast(it.message)
         }, {
-            isLoading.value = true
+            _isLoading.value = true
         }, {
-            isLoading.value = false
+            _isLoading.value = false
         })
     }
 
@@ -30,12 +36,13 @@ class AuthViewModel: ViewModel() {
         rxLifeScope.launch({
             AuthService.register(username, password, confirmPass, code)
             toast("注册成功,请登录")
+            _isRegisterSuccess.value = true
         }, {
             toast(it.message)
         }, {
-            isLoading.value = true
+            _isLoading.value = true
         }, {
-            isLoading.value = false
+            _isLoading.value = false
         })
     }
 }

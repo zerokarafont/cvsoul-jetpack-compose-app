@@ -1,8 +1,6 @@
 package com.compose.cvsoul.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -15,7 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.compose.cvsoul.ui.component.LoadingModal
+import com.compose.cvsoul.util.toast
 import com.compose.cvsoul.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
@@ -26,9 +27,10 @@ enum class AuthAction(value: String) {
 
 @Composable
 fun AuthScreen(navController: NavController) {
-    val viewModel = AuthViewModel()
-    val isLoading = viewModel.isLoading.observeAsState().value
-    val isLoginSuccess = viewModel.isLoginSuccess.observeAsState().value
+    val viewModel      = viewModel<AuthViewModel>()
+    val isLoading         by viewModel.isLoading.observeAsState(false)
+    val isLoginSuccess    by viewModel.isLoginSuccess.observeAsState(false)
+    val isRegisterSuccess by viewModel.isRegisterSuccess.observeAsState(false)
 
     var action      by remember { mutableStateOf("LOGIN") }
     var username    by remember { mutableStateOf("") }
@@ -39,11 +41,17 @@ fun AuthScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
 
     DisposableEffect(isLoginSuccess) {
-        if (isLoginSuccess == true) {
+        if (isLoginSuccess) {
             navController.navigate(route = "main")
         }
+        onDispose {}
+    }
 
-        onDispose {  }
+    DisposableEffect(isRegisterSuccess) {
+        if (isRegisterSuccess) {
+            action = "LOGIN"
+        }
+        onDispose {}
     }
 
     val isFormValid by remember(username, password, confirmPass, code) {
@@ -57,13 +65,16 @@ fun AuthScreen(navController: NavController) {
     }
 
     suspend fun handleRegister() {
-        if (password != confirmPass) { throw Exception("输入密码不一致") }
+        if (password != confirmPass) {
+            toast("输入密码不一致")
+            return
+        }
         viewModel.register(username, password, confirmPass, code)
     }
 
-      suspend fun handleLogin() {
-         viewModel.login(username, password)
-     }
+    suspend fun handleLogin() {
+        viewModel.login(username, password)
+    }
 
 
     @Composable
@@ -108,7 +119,7 @@ fun AuthScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
             Button(
-                enabled = isFormValid && !isLoading!!,
+                enabled = isFormValid && !isLoading,
                 onClick = { scope.launch { handleRegister() } }
             ) {
                 Text(text = "注册")
@@ -155,14 +166,13 @@ fun AuthScreen(navController: NavController) {
                 Text(text = "注册")
             }
             Button(
-                enabled = isFormValid && !isLoading!!,
+                enabled = isFormValid && !isLoading,
                 onClick = { scope.launch { handleLogin() } }
             ) {
                 Text(text = "登录")
             }
         }
     }
-
 
     Box(
         contentAlignment = Alignment.Center,
@@ -182,17 +192,7 @@ fun AuthScreen(navController: NavController) {
             }
         }
     }
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
-            .clickable(
-                enabled = false,
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) {}
-    ) {
-        CircularProgressIndicator()
+    if (isLoading) {
+       LoadingModal()
     }
 }
