@@ -6,6 +6,7 @@ buildscript {
         room_version = '2.3.0'
         lifecycle_version = '2.3.1'
         paging_version = '3.0.0'
+        eventbus_version = '3.2.0'
     }
     repositories {
         google()

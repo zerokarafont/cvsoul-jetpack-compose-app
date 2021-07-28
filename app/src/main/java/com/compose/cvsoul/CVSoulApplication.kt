@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import com.compose.cvsoul.util.Response
 import com.compose.cvsoul.util.crypto.getRawBase64Key
 import com.compose.cvsoul.util.crypto.getSessionId

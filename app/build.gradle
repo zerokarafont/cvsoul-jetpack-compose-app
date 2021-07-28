@@ -101,6 +101,10 @@ dependencies {
     implementation 'com.github.liujingxing.rxhttp:converter-protobuf:2.6.4'
     kapt 'com.github.liujingxing.rxhttp:rxhttp-compiler:2.6.4'
 
+    // eventbus
+    implementation "org.greenrobot:eventbus:$eventbus_version"
+    annotationProcessor "org.greenrobot:eventbus-annotation-processor:$eventbus_version"
+
     // crypto
     implementation "com.soywiz.korlibs.krypto:krypto-android:2.2.0"
 
