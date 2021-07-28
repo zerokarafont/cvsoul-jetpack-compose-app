@@ -23,7 +23,7 @@ object AuthService {
         val encryptPass = AES.encryptAes128Cbc(password.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
         val encryptConfirmPass = AES.encryptAes128Cbc(confirmPass.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
         return RxHttp
-            .postEncryptJson("/auth/register")
+            .postEncryptJson("../auth/register")
             .setCacheMode(CacheMode.ONLY_NETWORK)
             .add("username", username)
             .add("password", encryptPass)
@@ -43,7 +43,7 @@ object AuthService {
         val key = getRawBase64KeyFromCacheOrOtherwiseNew()
         val encryptPass = AES.encryptAes128Cbc(password.toByteArray(), Base64.decode(key!!), Padding.PKCS7Padding).base64
         return RxHttp
-            .postEncryptJson("/auth/login")
+            .postEncryptJson("../auth/login")
             .setCacheMode(CacheMode.ONLY_NETWORK)
             .add("username", username)
             .add("password", encryptPass)

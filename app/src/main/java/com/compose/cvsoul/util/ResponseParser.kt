@@ -1,6 +1,5 @@
 package com.compose.cvsoul.util
 
-import android.util.Log
 import com.compose.cvsoul.util.crypto.generateRawBase64Key
 import com.compose.cvsoul.util.crypto.getSessionId
 import com.compose.cvsoul.util.crypto.setRawBase64Key

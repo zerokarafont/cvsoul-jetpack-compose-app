@@ -52,6 +52,11 @@ class CVSoulApplication: Application() {
             .setOnParamAssembly {
                 val sessionId = getSessionId()
                 val token = getToken()
+
+                if (token!!.isNotEmpty()) {
+                    it.addHeader("authorization", "Bearer $token")
+                }
+
                 // 设置公共请求头
                 it
                     .addHeader("version", "1.0")
@@ -62,7 +67,8 @@ class CVSoulApplication: Application() {
                     .addHeader("timestamp", System.currentTimeMillis().toString())
                     .addHeader("nonce", UUID.randomUUID().toString())
                     .addHeader("sessionId", sessionId)
-                    .addHeader("Authorization", "Bearer $token")
+
+
             }
     }
 }

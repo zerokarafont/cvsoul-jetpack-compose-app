@@ -1,6 +1,9 @@
 package com.compose.cvsoul.ui.component
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,30 +14,33 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.compose.cvsoul.repository.model.UserModel
+import com.compose.cvsoul.repository.model.ProfileModel
 import com.compose.cvsoul.util.crypto.getToken
+import com.compose.cvsoul.viewmodel.ProfileViewModel
 
 @Composable
 fun Profile(navController: NavController) {
+    val viewModel = viewModel<ProfileViewModel>()
+    val user by viewModel.user.observeAsState(null)
 
     fun handleNavigate(route: String) {
         navController.navigate(route = route)
     }
 
-    fun checkIsAlreadyLogin(): Boolean {
-        return getToken()?.isNotEmpty() ?: false
+    LaunchedEffect(Unit) {
+        viewModel.fetchProfile()
     }
 
     Box(modifier = Modifier
@@ -43,12 +49,12 @@ fun Profile(navController: NavController) {
         Column(
             modifier = Modifier.padding(14.dp)
         ) {
-            AvatarItem(onClick = { handleNavigate("auth") })
+            AvatarItem(userInfo = user, onClick = { handleNavigate("auth") })
             Spacer(modifier = Modifier.height(20.dp))
             ProfileItem(text = "我的收藏", icon = Icons.Filled.Star, route = "star", onClick = { it -> handleNavigate(it) })
             ProfileItem(text = "关于", icon = Icons.Filled.Info, route = "about", onClick = { it -> handleNavigate(it) })
             Spacer(modifier = Modifier.height(20.dp))
-            if (checkIsAlreadyLogin()) {
+            if (user != null) {
                 LogoutItem()
             }
         }
@@ -56,7 +62,7 @@ fun Profile(navController: NavController) {
 }
 
 @Composable
-fun AvatarItem(userInfo: UserModel? = null, onClick: () -> Unit) {
+fun AvatarItem(userInfo: ProfileModel? = null, onClick: () -> Unit) {
 
     fun handleLogin() {
         onClick()
@@ -114,8 +120,10 @@ fun ProfileItem(text: String, icon: ImageVector, route: String, onClick: (dest: 
 
 @Composable
 fun LogoutItem() {
-    fun handleLogout() {
+    val viewModel = viewModel<ProfileViewModel>()
 
+    fun handleLogout() {
+        viewModel.logout()
     }
 
     Button(
@@ -128,9 +136,3 @@ fun LogoutItem() {
         Text(text = "退出登录")
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ProfilePreview() {
-//    Profile()
-//}

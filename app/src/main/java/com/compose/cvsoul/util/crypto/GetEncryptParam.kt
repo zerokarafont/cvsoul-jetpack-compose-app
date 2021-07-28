@@ -14,10 +14,12 @@ class GetEncryptParam(url: String) : NoBodyParam(url, Method.GET) {
         val timestamp = headers["timestamp"]
         val nonce = headers["nonce"]
 
-        for (pair in queryParam) {
-            val key = pair.key
-            val value = pair.value.toString()
-            params += "$key=$value"
+        if (queryParam != null) {
+            for (pair in queryParam) {
+                val key = pair.key
+                val value = pair.value.toString()
+                params += "$key=$value"
+            }
         }
 
         val rawBase64Key = getRawBase64KeyFromCacheOrOtherwiseNew()
