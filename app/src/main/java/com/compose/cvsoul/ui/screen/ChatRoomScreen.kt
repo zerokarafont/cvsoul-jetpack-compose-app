@@ -31,69 +31,20 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun ChatRoomScreen(navController: NavController) {
-    val pages = remember {
-        listOf(
-            CateModel("1", "发现"),
-            CateModel("2", "搞笑"),
-            CateModel("3", "运动"),
-            CateModel("4", "励志"),
-            CateModel("5", "热血"),
-            CateModel("6", "战斗"),
-            CateModel("7", "竞技"),
-            CateModel("8", "校园"),
-        )
-    }
-    val pagerState = rememberPagerState(pageCount = pages.size)
-    
-    val scope = rememberCoroutineScope()
-
-    ScrollableTabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
-        },
-        edgePadding = 0.dp,
-        modifier = Modifier
-            .requiredHeight(30.dp)
-            .zIndex(1f)
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(false),
+        onRefresh = {  },
     ) {
-        pages.forEachIndexed { index, cate ->
-            Tab(
-                text = { Text(cate.name) },
-                selected = pagerState.currentPage == index,
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                },
-            )
-        }
-    }
-
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier
-            .wrapContentSize(align = Alignment.Center, unbounded = false)
-            .padding(top = 35.dp)
-    ) { page ->
-
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(false),
-            onRefresh = {  },
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(3),
+            contentPadding = PaddingValues(5.dp),
+            modifier = Modifier.padding(bottom = 50.dp)
         ) {
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(3),
-                contentPadding = PaddingValues(5.dp),
-                modifier = Modifier.padding(bottom = 50.dp)
-            ) {
-                items(29) { index ->
-                    Card(modifier = Modifier
-                        .requiredSize(122.dp)
-                        .padding(bottom = 10.dp)) {
-                        Text(text = index.toString())
-                    }
+            items(29) { index ->
+                Card(modifier = Modifier
+                    .requiredSize(122.dp)
+                    .padding(bottom = 10.dp)) {
+                    Text(text = index.toString())
                 }
             }
         }

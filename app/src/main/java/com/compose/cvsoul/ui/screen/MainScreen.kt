@@ -1,5 +1,6 @@
 package com.compose.cvsoul.ui.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import com.compose.cvsoul.ui.component.Profile
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalFoundationApi
 @ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavHostController) {
