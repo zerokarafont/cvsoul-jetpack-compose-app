@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.paging.Pager
+import com.compose.cvsoul.repository.model.CateModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -32,27 +33,35 @@ import kotlinx.coroutines.launch
 fun ChatRoomScreen(navController: NavController) {
     val pages = remember {
         listOf(
-            mapOf("name" to "default", "title" to "发现")
+            CateModel("1", "发现"),
+            CateModel("2", "搞笑"),
+            CateModel("3", "运动"),
+            CateModel("4", "励志"),
+            CateModel("5", "热血"),
+            CateModel("6", "战斗"),
+            CateModel("7", "竞技"),
+            CateModel("8", "校园"),
         )
     }
     val pagerState = rememberPagerState(pageCount = pages.size)
     
     val scope = rememberCoroutineScope()
 
-    TabRow(
+    ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
             )
         },
+        edgePadding = 0.dp,
         modifier = Modifier
             .requiredHeight(30.dp)
             .zIndex(1f)
     ) {
-        pages.forEachIndexed { index, item ->
+        pages.forEachIndexed { index, cate ->
             Tab(
-                text = { Text(item["title"]!!) },
+                text = { Text(cate.name) },
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
@@ -88,6 +97,5 @@ fun ChatRoomScreen(navController: NavController) {
                 }
             }
         }
-
     }
 }
