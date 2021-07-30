@@ -13,6 +13,7 @@ import com.compose.cvsoul.ui.screen.AuthScreen
 import com.compose.cvsoul.ui.screen.MainScreen
 import com.compose.cvsoul.ui.screen.SearchScreen
 import com.compose.cvsoul.ui.theme.CVSoulTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
         EventBus.getDefault().register(this)
     }
 
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         

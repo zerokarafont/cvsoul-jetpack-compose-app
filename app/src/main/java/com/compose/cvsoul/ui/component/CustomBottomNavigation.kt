@@ -9,8 +9,11 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.*
@@ -28,7 +31,8 @@ fun CustomBottomNavigation(navController: NavController) {
 
     var selectedItem by remember { mutableStateOf(0) }
     val icons = mutableListOf(
-        mapOf("iconName" to "home", "desc" to "主页"),
+        mapOf("iconName" to "chatroom", "desc" to "聊天室"),
+        mapOf("iconName" to "quote", "desc" to "语录"),
         mapOf("iconName" to "person", "desc" to "消息")
     )
 
@@ -52,23 +56,27 @@ fun CustomBottomNavigation(navController: NavController) {
                     )
             ) {
                 when(icon["iconName"]) {
-                    "home" -> {
+                    "chatroom" -> {
                         if (index == selectedItem)
                             Icon(imageVector = Icons.Filled.Home, contentDescription = icon["desc"])
                         else
                             Icon(imageVector = Icons.Outlined.Home, contentDescription = icon["desc"])
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(text = icon["desc"]!!, fontSize = 10.sp)
+                    }
+                    "quote" -> {
+                        if (index == selectedItem)
+                            Icon(imageVector = Icons.Filled.Call, contentDescription = icon["desc"])
+                        else
+                            Icon(imageVector = Icons.Outlined.Call, contentDescription = icon["desc"])
                     }
                     "person" -> {
                         if (index == selectedItem)
                             Icon(imageVector = Icons.Filled.Person, contentDescription = icon["desc"])
                         else
                             Icon(imageVector = Icons.Outlined.Person, contentDescription = icon["desc"])
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(text = icon["desc"]!!, fontSize = 10.sp)
                     }
                 }
+                Spacer(modifier = Modifier.width(2.dp))
+                Text(text = icon["desc"]!!, fontSize = 10.sp)
             }
         }
     }

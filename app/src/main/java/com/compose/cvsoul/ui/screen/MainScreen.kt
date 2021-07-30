@@ -12,8 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import com.compose.cvsoul.ui.component.CustomBottomNavigation
 import com.compose.cvsoul.ui.component.CustomTopAppBar
 import com.compose.cvsoul.ui.component.Profile
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavHostController) {
     val scope = rememberCoroutineScope()
@@ -34,9 +36,12 @@ fun MainScreen(navController: NavHostController) {
         topBar = { CustomTopAppBar(navController = navController, onExpand = { handleOpenDrawer() }) },
         bottomBar = { CustomBottomNavigation(navController = mainNavController) },
     ) {
-        NavHost(navController = mainNavController, startDestination = "home") {
-                composable(route = "home") {
-                    HomeScreen(navController = navController)
+        NavHost(navController = mainNavController, startDestination = "chatroom") {
+                composable(route = "chatroom") {
+                    ChatRoomScreen(navController = navController)
+                }
+                composable(route = "quote") {
+                    QuoteScreen(navController = navController)
                 }
                 composable(route = "person") {
                     MessageScreen(navController = navController)
