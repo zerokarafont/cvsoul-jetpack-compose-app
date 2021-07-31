@@ -1,6 +1,7 @@
 package com.compose.cvsoul.repository.service
 
 import com.compose.cvsoul.repository.model.ProfileModel
+import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toResponse
 
@@ -12,6 +13,7 @@ object UserService {
     suspend fun fetchProfile(): ProfileModel {
         return RxHttp
             .getEncrypt("/user/profile")
+            .setCacheMode(CacheMode.ONLY_NETWORK)
             .setDecoderEnabled(false)
             .toResponse<ProfileModel>()
             .await()

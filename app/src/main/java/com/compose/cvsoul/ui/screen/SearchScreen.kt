@@ -16,7 +16,7 @@ import com.compose.cvsoul.ui.component.Search
 @Composable
 fun SearchScreen(navController: NavController) {
 
-    fun handleBackHome() { navController.navigate(route = "main") }
+    fun handleBack() { navController.popBackStack() }
 
     Box(modifier = Modifier.fillMaxSize().background(color = Color(0xFFEEEEEE))) {
         Row(
@@ -24,7 +24,7 @@ fun SearchScreen(navController: NavController) {
                 .requiredHeight(56.dp)
                 .padding(vertical = 10.dp)
         ) {
-            IconButton(onClick = { handleBackHome() }) {
+            IconButton(onClick = { handleBack() }) {
                 Icon(Icons.Filled.ArrowBack, contentDescription = null)
             }
             Search(onSearch = { /*TODO*/ }, onTap = {}, initIsFocus = true)

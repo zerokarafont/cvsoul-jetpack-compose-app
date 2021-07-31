@@ -23,44 +23,47 @@ import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun PagerLayout(tabs: List<CateModel>, content: @Composable (page: Int) -> Unit) {
-    val pages = remember { tabs }
-    val pagerState = rememberPagerState(pageCount = pages.size)
+fun PagerLayout(tabs: List<CateModel>? = null, content: @Composable (page: Int) -> Unit) {
+    val pages = tabs
 
-    val scope = rememberCoroutineScope()
+    pages?.let {
+        val pagerState = rememberPagerState(pageCount = pages.size)
 
-    ScrollableTabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
-        },
-        edgePadding = 0.dp,
-        modifier = Modifier
-            .requiredHeight(30.dp)
-            .zIndex(1f)
-    ) {
-        pages.forEachIndexed { index, cate ->
-            Tab(
-                text = { Text(cate.name) },
-                selected = pagerState.currentPage == index,
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                },
-            )
+        val scope = rememberCoroutineScope()
+
+        ScrollableTabRow(
+            selectedTabIndex = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                )
+            },
+            edgePadding = 0.dp,
+            modifier = Modifier
+                .requiredHeight(30.dp)
+                .zIndex(1f)
+        ) {
+            pages?.forEachIndexed { index, cate ->
+                Tab(
+                    text = { Text(cate.name) },
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                )
+            }
         }
-    }
 
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier
-            .wrapContentSize(align = Alignment.Center, unbounded = false)
-            .padding(top = 35.dp)
-    ) { page ->
-        content(page)
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .wrapContentSize(align = Alignment.Center, unbounded = false)
+                .padding(top = 35.dp)
+        ) { page ->
+            content(page)
+        }
     }
 
 }

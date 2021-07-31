@@ -9,11 +9,15 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.compose.cvsoul.repository.model.CateModel
 import com.compose.cvsoul.ui.layout.PagerLayout
+import com.compose.cvsoul.viewmodel.QuoteViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -22,19 +26,15 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @ExperimentalPagerApi
 @Composable
 fun QuoteScreen(navController: NavController) {
+    val viewModel = viewModel<QuoteViewModel>()
+    val isLoading by viewModel.isLoading.observeAsState(false)
+    val cates     by viewModel.cates.observeAsState()
 
-    val tabs = listOf(
-        CateModel("1", "发现"),
-        CateModel("2", "搞笑"),
-        CateModel("3", "运动"),
-        CateModel("4", "励志"),
-        CateModel("5", "热血"),
-        CateModel("6", "战斗"),
-        CateModel("7", "竞技"),
-        CateModel("8", "校园"),
-    )
+    LaunchedEffect(Unit) {
+        viewModel.fetchAllCates()
+    }
 
-    PagerLayout(tabs) { page ->
+    PagerLayout(tabs = cates) { page ->
         SwipeRefresh(
             state = rememberSwipeRefreshState(false),
             onRefresh = {  },
