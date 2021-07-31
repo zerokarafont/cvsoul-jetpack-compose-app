@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 fun PagerLayout(tabs: List<CateModel>? = null, content: @Composable (page: Int) -> Unit) {
     val pages = tabs
 
-    pages?.let {
+    if (!pages.isNullOrEmpty()) {
         val pagerState = rememberPagerState(pageCount = pages.size)
 
         val scope = rememberCoroutineScope()
@@ -43,7 +43,7 @@ fun PagerLayout(tabs: List<CateModel>? = null, content: @Composable (page: Int) 
                 .requiredHeight(30.dp)
                 .zIndex(1f)
         ) {
-            pages?.forEachIndexed { index, cate ->
+            pages.forEachIndexed { index, cate ->
                 Tab(
                     text = { Text(cate.name) },
                     selected = pagerState.currentPage == index,
