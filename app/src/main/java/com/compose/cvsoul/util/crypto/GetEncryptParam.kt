@@ -1,5 +1,6 @@
 package com.compose.cvsoul.util.crypto
 
+import android.util.Log
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import rxhttp.wrapper.annotation.Param
@@ -10,7 +11,7 @@ import rxhttp.wrapper.param.NoBodyParam
 class GetEncryptParam(url: String) : NoBodyParam(url, Method.GET) {
 
     override fun getHttpUrl(): HttpUrl {
-        var params = ""
+        var params = emptyList<String>()
         val timestamp = headers["timestamp"]
         val nonce = headers["nonce"]
 
@@ -18,17 +19,19 @@ class GetEncryptParam(url: String) : NoBodyParam(url, Method.GET) {
             for (pair in queryParam) {
                 val key = pair.key
                 val value = pair.value.toString()
-                params += "$key=$value"
+                params = params.plus("$key=$value")
             }
         }
 
+        val paramsUrlFormat = params.joinToString(separator = "&")
+
         val rawBase64Key = getRawBase64KeyFromCacheOrOtherwiseNew()
         val encryptAppKey = generateAppKey(rawBase64Key!!)
-        val sign = generateSign(params, timestamp!!, nonce!!, rawBase64Key)
+        val sign = generateSign(paramsUrlFormat, timestamp!!, nonce!!, rawBase64Key)
 
         addHeader("sign", sign)
         addHeader("appKey", encryptAppKey)
 
-        return if (params.isEmpty()) simpleUrl.toHttpUrl() else "$simpleUrl?$params".toHttpUrl()
+        return if (params.isEmpty()) simpleUrl.toHttpUrl() else "$simpleUrl?$paramsUrlFormat".toHttpUrl()
     }
 }
