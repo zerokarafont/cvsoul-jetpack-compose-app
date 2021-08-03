@@ -1,5 +1,6 @@
 package com.compose.cvsoul.util
 
+import android.util.Log
 import com.compose.cvsoul.repository.model.MessageEvent
 import com.compose.cvsoul.repository.model.MessageType
 import com.compose.cvsoul.util.crypto.generateRawBase64Key
@@ -15,9 +16,8 @@ import java.io.IOException
 import java.lang.reflect.Type
 
 data class Response<T>(val statusCode: Int = 0, val msg: String? = null, val method: String? = null, var data: T? = null)
-data class PageList<T>(val curPage: Int = 0, val pageCount: Int = 0, val total: Int = 0, val list: List<T>? = null)
 
-@Parser(name = "Response", wrappers = [List::class, PageList::class])
+@Parser(name = "Response")
 open class ResponseParser<T> : TypeParser<T> {
     protected constructor() : super()
 

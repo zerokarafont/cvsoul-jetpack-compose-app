@@ -8,7 +8,6 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun PagerLayout(tabs: List<CateModel>? = null, content: @Composable (page: Int) -> Unit) {
+fun ViewPagerLayout(tabs: List<CateModel>? = null, content: @Composable (page: Int) -> Unit) {
     val pages = tabs
 
     if (!pages.isNullOrEmpty()) {
