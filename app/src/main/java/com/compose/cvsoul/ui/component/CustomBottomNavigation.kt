@@ -51,7 +51,9 @@ fun CustomBottomNavigation(navController: NavController) {
                         interactionSource = MutableInteractionSource(),
                         onClick = {
                             selectedItem = index
-                            navController.navigate(route = icon["iconName"]!!)
+                            navController.navigate(route = icon["iconName"]!!) {
+                                popUpTo(route = icon["iconName"]!!) { inclusive = false }
+                            }
                         }
                     )
             ) {

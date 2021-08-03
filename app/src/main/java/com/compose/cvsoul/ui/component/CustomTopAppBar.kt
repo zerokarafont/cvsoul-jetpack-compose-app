@@ -21,7 +21,7 @@ fun CustomTopAppBar(
     onExpand: () -> Unit
 ) {
 
-    fun jumpToSearch() { navController.navigate(route = "search") }
+    fun jumpToSearch() { navController.navigate(route = "search") { launchSingleTop = true } }
 
     TopAppBar(backgroundColor = Color.Transparent, elevation = 0.dp, modifier = Modifier
         .fillMaxWidth()
