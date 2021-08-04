@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.compose.cvsoul.ui.layout.SwipeRefreshLayout
 import com.compose.cvsoul.ui.layout.ViewPagerLayout
 import com.compose.cvsoul.viewmodel.QuoteViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -52,27 +53,19 @@ fun QuoteScreen(navController: NavController, viewModel: QuoteViewModel, listSta
         viewModel.changeCurrentViewPager(page)
     }
 
-    ViewPagerLayout(tabs = cates, currentPage = currentViewPager, onTap = { cateId, page -> handleTabChange(cateId, page) }) { page ->
-        val rememberSwipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
-        SwipeRefresh(
-            state = rememberSwipeRefreshState,
-            onRefresh = {
-                collectAsLazyPagingAlbums?.refresh()
-            },
-        ) {
-            rememberSwipeRefreshState.isRefreshing = collectAsLazyPagingAlbums?.loadState?.refresh is LoadState.Loading
-
-            collectAsLazyPagingAlbums?.let {
+    ViewPagerLayout(tabs = cates, onTap = { cate, page -> handleTabChange(cate._id, page) }) { page ->
+        SwipeRefreshLayout(data = collectAsLazyPagingAlbums) {
+            it?.let {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(3),
                     contentPadding = PaddingValues(5.dp),
                     state = listState,
                     modifier = Modifier.padding(bottom = 50.dp)
                 ) {
-                    items(collectAsLazyPagingAlbums.itemCount) { index ->
-                        val item = collectAsLazyPagingAlbums[index]
+                    items(it.itemCount) { index ->
+                        val item = it[index]
                         item?.let {
-                            Card(modifier = Modifier.size(122.dp)) {
+                            Card(modifier = Modifier.padding(5.dp)) {
                                 Text(text = item.title)
                             }
                         }
