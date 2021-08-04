@@ -1,13 +1,11 @@
 package com.compose.cvsoul.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
+import androidx.paging.*
 import com.compose.cvsoul.repository.model.CateModel
 import com.compose.cvsoul.repository.model.QuoteAlbumDisplayModel
 import com.compose.cvsoul.repository.service.CateService
 import com.compose.cvsoul.repository.service.QuoteService
+import kotlinx.coroutines.flow.Flow
 
 /**
  * 语录封面集显示仓库
@@ -18,9 +16,12 @@ object QuoteDisplayRepository {
         return CateService.fetchAllCates()
     }
 
-    fun fetchQuoteAlbumPaginationList(cateId: String, title: String? = null) = Pager(config = PagingConfig(18)) {
-        DataPagingSource(QuoteService, cateId, title)
-    }.flow
+    fun fetchQuoteAlbumPaginationList(cateId: String, title: String? = null): Flow<PagingData<QuoteAlbumDisplayModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 18, initialLoadSize = 18),
+            pagingSourceFactory = { DataPagingSource(QuoteService, cateId, title) }
+        ).flow
+    }
 
     class DataPagingSource(private val quoteService: QuoteService, private val cateId: String,private val title: String? = null) : PagingSource<Int, QuoteAlbumDisplayModel>() {
 
