@@ -1,5 +1,6 @@
 package com.compose.cvsoul.viewmodel
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -9,7 +10,7 @@ import com.compose.cvsoul.repository.model.QuoteAlbumDisplayModel
 import com.compose.cvsoul.util.toast
 import kotlinx.coroutines.flow.Flow
 
-class QuoteViewModel: ViewModel() {
+class QuoteViewModel(val listState: LazyListState): ViewModel() {
     private val _cates            = MutableLiveData<List<CateModel>?>(null)
     private val _list             = MutableLiveData<Flow<PagingData<QuoteAlbumDisplayModel>>>(null)
     private val _currentViewPager = MutableLiveData(0)

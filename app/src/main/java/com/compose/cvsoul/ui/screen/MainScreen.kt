@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.compose.cvsoul.ui.component.CustomBottomNavigation
 import com.compose.cvsoul.ui.component.CustomTopAppBar
 import com.compose.cvsoul.ui.component.Profile
+import com.compose.cvsoul.viewmodel.ChatroomViewModel
 import com.compose.cvsoul.viewmodel.QuoteViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -41,15 +42,14 @@ fun MainScreen(navController: NavHostController) {
         topBar = { CustomTopAppBar(navController = navController, onExpand = { handleOpenDrawer() }) },
         bottomBar = { CustomBottomNavigation(navController = mainNavController) },
     ) {
-        val quoteViewModel = viewModel<QuoteViewModel>()
-        val chatroomListState = rememberLazyListState()
-        val quoteListState = rememberLazyListState()
+        val chatroomViewModel = ChatroomViewModel(rememberLazyListState())
+        val quoteViewModel = QuoteViewModel(rememberLazyListState())
         NavHost(navController = mainNavController, startDestination = "chatroom") {
                 composable(route = "chatroom") {
-                    ChatRoomScreen(navController = navController, listState = chatroomListState)
+                    ChatRoomScreen(navController = navController, viewModel = chatroomViewModel)
                 }
                 composable(route = "quote") {
-                    QuoteScreen(navController = navController, viewModel = quoteViewModel, listState = quoteListState )
+                    QuoteScreen(navController = navController, viewModel = quoteViewModel)
                 }
                 composable(route = "person") {
                     MessageScreen(navController = navController)
