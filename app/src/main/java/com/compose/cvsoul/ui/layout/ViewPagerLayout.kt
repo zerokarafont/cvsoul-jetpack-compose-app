@@ -22,15 +22,15 @@ import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun ViewPagerLayout(tabs: List<CateModel>? = null, currentPage: Int, onTap: (cateId: String, page: Int) -> Unit, content: @Composable (page: Int) -> Unit) {
+fun ViewPagerLayout(tabs: List<CateModel>? = null, offscreenLimit: Int = 1, onTap: (cateModel: CateModel, page: Int) -> Unit, content: @Composable (page: Int) -> Unit) {
 
     tabs?.let {
-        val pagerState = rememberPagerState(initialPage = currentPage,  pageCount = tabs.size)
+        val pagerState = rememberPagerState(pageCount = tabs.size, initialOffscreenLimit = offscreenLimit)
 
         val scope = rememberCoroutineScope()
 
         ScrollableTabRow(
-            selectedTabIndex = currentPage,
+            selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -48,7 +48,7 @@ fun ViewPagerLayout(tabs: List<CateModel>? = null, currentPage: Int, onTap: (cat
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(index)
-                            onTap(cate._id, index)
+                            onTap(cate, index)
                         }
                     },
                 )
