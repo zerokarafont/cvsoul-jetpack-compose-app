@@ -3,11 +3,9 @@ package com.compose.cvsoul.ui.layout
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,25 +20,21 @@ import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun ViewPagerLayout(tabs: List<CateModel>? = null, offscreenLimit: Int = 1, onTap: (cateModel: CateModel, page: Int) -> Unit, content: @Composable (page: Int) -> Unit) {
+fun ViewPagerLayout(tabs: List<CateModel>? = null, offscreenLimit: Int = 1, scrollable: Boolean = false, onTap: (cateModel: CateModel, page: Int) -> Unit, content: @Composable (page: Int) -> Unit) {
 
     tabs?.let {
         val pagerState = rememberPagerState(pageCount = tabs.size, initialOffscreenLimit = offscreenLimit)
+        val currentPage = pagerState.currentPage
 
         val scope = rememberCoroutineScope()
 
-        ScrollableTabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                )
-            },
-            edgePadding = 0.dp,
-            modifier = Modifier
-                .requiredHeight(30.dp)
-                .zIndex(1f)
-        ) {
+        DisposableEffect(currentPage) {
+            onTap(it[currentPage], currentPage)
+            onDispose {  }
+        }
+
+        @Composable
+        fun Tabs() {
             tabs.forEachIndexed { index, cate ->
                 Tab(
                     text = { Text(cate.name) },
@@ -48,10 +42,40 @@ fun ViewPagerLayout(tabs: List<CateModel>? = null, offscreenLimit: Int = 1, onTa
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(index)
-                            onTap(cate, index)
                         }
-                    },
+                    }
                 )
+            }
+        }
+
+        if (scrollable) {
+            ScrollableTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    )
+                },
+                edgePadding = 0.dp,
+                modifier = Modifier
+                    .requiredHeight(30.dp)
+                    .zIndex(1f)
+            ) {
+                Tabs()
+            }
+        } else {
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    )
+                },
+                modifier = Modifier
+                    .requiredHeight(30.dp)
+                    .zIndex(1f)
+            ) {
+                Tabs()
             }
         }
 
@@ -59,7 +83,8 @@ fun ViewPagerLayout(tabs: List<CateModel>? = null, offscreenLimit: Int = 1, onTa
             state = pagerState,
             modifier = Modifier
                 .wrapContentSize(align = Alignment.Center, unbounded = false)
-                .padding(top = 35.dp)
+                .padding(top = 35.dp),
+
         ) { page ->
             content(page)
         }
