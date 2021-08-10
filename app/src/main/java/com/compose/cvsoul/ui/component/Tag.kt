@@ -27,7 +27,6 @@ fun Tag(data: List<TagModel?>? = null, onTap: (tag: String) -> Unit ) {
         contentColor = Color(0xFFEEEEEE),
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 60.dp)
     ) {
         Text(text = "风格", color = Color.Black,  fontWeight = FontWeight(700), modifier = Modifier.padding(start = 2.dp).padding(vertical = 5.dp))
         Column(modifier = Modifier.padding(top = 25.dp)) {
