@@ -32,6 +32,6 @@ fun CustomTopAppBar(
                     Icon(imageVector = Icons.Filled.Menu, contentDescription = "菜单")
                 }
             }
-            Search(onSearch = {}, onTap = { jumpToSearch() })
+            Search(value = "", onValueChange = {}, onSearch = {}, onTap = { jumpToSearch() })
     }
 }

@@ -1,7 +1,10 @@
 package com.compose.cvsoul.ui.component
 
-import android.util.Log
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Surface
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.compose.cvsoul.repository.model.*
 import com.compose.cvsoul.ui.layout.SwipeRefreshLayout
 import com.compose.cvsoul.ui.layout.ViewPagerLayout
@@ -25,25 +28,32 @@ fun SearchResult(
         currentTab = cate._id
     }
 
-    ViewPagerLayout(tabs = cates, onTap = { cate, page -> handleTabChange(cate, page)  }) { page ->
-        Log.d("debug", "searchResultPage: $page")
 
-        when(currentTab) {
-            "voice" -> {
-                SwipeRefreshLayout(data = voiceLazyPagingData?.items) {
-                    VoiceList(data = it, listState = voiceLazyPagingData?.listState)
+        ViewPagerLayout(tabs = cates, offscreenLimit = 2, onTap = { cate, page -> handleTabChange(cate, page)  }) { page ->
+            Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+                when(currentTab) {
+                    "voice" -> {
+                        if (page == 0) {
+                            SwipeRefreshLayout(data = voiceLazyPagingData?.items) {
+                                VoiceList(data = it, listState = voiceLazyPagingData?.listState)
+                            }
+                        }
+                    }
+                    "quote" -> {
+                        if (page == 1) {
+                            SwipeRefreshLayout(data = quoteLazyPagingData?.items) {
+                                QuoteList(data = it, listState = quoteLazyPagingData?.listState)
+                            }
+                        }
+                    }
+                    "chatroom" -> {
+                        if (page == 2) {
+                            SwipeRefreshLayout(data = chatroomLazyPagingData?.items) {
+                                ChatroomList(data = it, listState = chatroomLazyPagingData?.listState)
+                            }
+                        }
+                    }
                 }
             }
-            "quote" -> {
-                SwipeRefreshLayout(data = quoteLazyPagingData?.items) {
-                    QuoteList(data = it, listState = quoteLazyPagingData?.listState)
-                }
-            }
-            "chatroom" -> {
-                SwipeRefreshLayout(data = chatroomLazyPagingData?.items) {
-                    ChatroomList(data = it, listState = chatroomLazyPagingData?.listState)
-                }
-            }
-        }
     }
 }

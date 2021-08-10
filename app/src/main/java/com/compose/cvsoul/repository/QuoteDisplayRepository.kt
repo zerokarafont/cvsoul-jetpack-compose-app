@@ -16,14 +16,14 @@ object QuoteDisplayRepository {
         return CateService.fetchAllCates()
     }
 
-    fun fetchQuoteAlbumPaginationList(cateId: String, title: String? = null): Flow<PagingData<QuoteAlbumDisplayModel>> {
+    fun fetchQuoteAlbumPaginationList(cateId: String? = null, title: String? = null): Flow<PagingData<QuoteAlbumDisplayModel>> {
         return Pager(
             config = PagingConfig(pageSize = 18, initialLoadSize = 18),
             pagingSourceFactory = { DataPagingSource(QuoteService, cateId, title) }
         ).flow
     }
 
-    class DataPagingSource(private val quoteService: QuoteService, private val cateId: String,private val title: String? = null) : PagingSource<Int, QuoteAlbumDisplayModel>() {
+    class DataPagingSource(private val quoteService: QuoteService, private val cateId: String? = null,private val title: String? = null) : PagingSource<Int, QuoteAlbumDisplayModel>() {
 
         override suspend fun load(params: LoadParams<Int>): LoadResult<Int, QuoteAlbumDisplayModel> {
             return try {

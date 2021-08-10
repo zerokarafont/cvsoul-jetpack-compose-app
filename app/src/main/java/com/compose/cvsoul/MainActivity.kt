@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +17,7 @@ import com.compose.cvsoul.ui.screen.AuthScreen
 import com.compose.cvsoul.ui.screen.MainScreen
 import com.compose.cvsoul.ui.screen.SearchScreen
 import com.compose.cvsoul.ui.theme.CVSoulTheme
+import com.compose.cvsoul.viewmodel.SearchViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -28,6 +32,7 @@ class MainActivity : ComponentActivity() {
         EventBus.getDefault().register(this)
     }
 
+    @ExperimentalMaterialApi
     @ExperimentalFoundationApi
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +42,16 @@ class MainActivity : ComponentActivity() {
             CVSoulTheme {
                     navController = rememberNavController()
 
+                    var searchListStateGroup = emptyList<LazyListState>()
+                    repeat(3) {
+                       searchListStateGroup = searchListStateGroup.plus(rememberLazyListState())
+                    }
+                    val searchViewModel = SearchViewModel(searchListStateGroup)
                     NavHost(navController = navController, startDestination = "main", route = "root") {
                         composable(route = "main") {
                             MainScreen(navController = navController)
                         }
-                        composable(route = "search") { SearchScreen(navController = navController) }
+                        composable(route = "search") { SearchScreen(navController = navController, viewModel = searchViewModel) }
                         composable(route = "auth") { AuthScreen(navController = navController) }
                     }
             }

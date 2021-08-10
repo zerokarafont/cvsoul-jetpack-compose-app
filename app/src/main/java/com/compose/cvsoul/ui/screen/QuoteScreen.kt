@@ -42,7 +42,7 @@ fun QuoteScreen(navController: NavController, viewModel: QuoteViewModel) {
         viewModel.changeCurrentViewPager(page)
     }
 
-    ViewPagerLayout(tabs = cates, onTap = { cate, page -> handleTabChange(cate._id, page) }) { page ->
+    ViewPagerLayout(tabs = cates, offscreenLimit = 2, scrollable = true, onTap = { cate, page -> handleTabChange(cate._id, page) }) { page ->
         SwipeRefreshLayout(data = collectAsLazyPagingAlbums) {
             QuoteGrid(data = it, listState = listState)
         }

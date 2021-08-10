@@ -18,7 +18,7 @@ class QuoteViewModel(val listState: LazyListState): ViewModel() {
 
     val cates:            LiveData<List<CateModel>?> = _cates
     val list:             LiveData<Flow<PagingData<QuoteAlbumDisplayModel>>> = _list
-    val currentCateId:           LiveData<String> = _currentCateId
+    val currentCateId:    LiveData<String> = _currentCateId
     val currentViewPager: LiveData<Int> = _currentViewPager
 
     suspend fun fetchAllCates() {

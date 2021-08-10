@@ -1,10 +1,6 @@
 package com.compose.cvsoul.ui.component
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.FocusInteraction
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -20,7 +16,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.*
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
@@ -30,8 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Search(onSearch: (input: String) -> Unit, onTap: () -> Unit, initIsFocus: Boolean = false) {
-    var value by remember { mutableStateOf("") }
+fun Search(value: String = "", onValueChange: (value: String) -> Unit, onSearch: (input: String) -> Unit, onTap: () -> Unit, initIsFocus: Boolean = false) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -60,7 +56,7 @@ fun Search(onSearch: (input: String) -> Unit, onTap: () -> Unit, initIsFocus: Bo
     ) {
         BasicTextField(
             value = value,
-            onValueChange = { value = it },
+            onValueChange = { onValueChange(it) },
             singleLine = true,
             maxLines = 1,
             textStyle = TextStyle(
@@ -101,7 +97,7 @@ fun Search(onSearch: (input: String) -> Unit, onTap: () -> Unit, initIsFocus: Bo
                     }
                     if (value.isNotEmpty()) {
                         IconButton(
-                            onClick = { value = "" },
+                            onClick = { onValueChange("") },
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
