@@ -5,6 +5,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import com.compose.cvsoul.repository.model.*
 import com.compose.cvsoul.ui.layout.SwipeRefreshLayout
 import com.compose.cvsoul.ui.layout.ViewPagerLayout
@@ -13,6 +14,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @Composable
 fun SearchResult(
+    navController: NavController,
     voiceLazyPagingData: LazyPagingData<VoiceModel>? = null,
     quoteLazyPagingData: LazyPagingData<QuoteAlbumDisplayModel>? = null,
     chatroomLazyPagingData: LazyPagingData<ChatroomDisplayModel>? = null
@@ -42,7 +44,7 @@ fun SearchResult(
                     "quote" -> {
                         if (page == 1) {
                             SwipeRefreshLayout(data = quoteLazyPagingData?.items) {
-                                QuoteList(data = it, listState = quoteLazyPagingData?.listState)
+                                QuoteList(data = it, listState = quoteLazyPagingData?.listState, navigateTo = { _id -> navController.navigate(route = "quote_detail/$_id") })
                             }
                         }
                     }

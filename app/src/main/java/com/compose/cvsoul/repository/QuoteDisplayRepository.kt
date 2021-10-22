@@ -3,17 +3,22 @@ package com.compose.cvsoul.repository
 import androidx.paging.*
 import com.compose.cvsoul.repository.model.CateModel
 import com.compose.cvsoul.repository.model.QuoteAlbumDisplayModel
+import com.compose.cvsoul.repository.model.QuoteAlbumPlaylistModel
 import com.compose.cvsoul.repository.service.CateService
 import com.compose.cvsoul.repository.service.QuoteService
 import kotlinx.coroutines.flow.Flow
 
 /**
- * 语录封面集显示仓库
+ * 语录集显示仓库
  */
 object QuoteDisplayRepository {
 
     suspend fun fetchAllCates(): List<CateModel> {
         return CateService.fetchAllCates()
+    }
+
+    suspend fun fetchQuoteAlbumDetail(_id: String): QuoteAlbumPlaylistModel {
+        return QuoteService.fetchQuoteAlbumDetail(_id)
     }
 
     fun fetchQuoteAlbumPaginationList(cateId: String? = null, title: String? = null): Flow<PagingData<QuoteAlbumDisplayModel>> {

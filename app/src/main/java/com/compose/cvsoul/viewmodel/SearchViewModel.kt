@@ -28,14 +28,18 @@ class SearchViewModel(private val listStateGroup: List<LazyListState>): ViewMode
     }
 
     fun fetchSearchResultPaginationList(searchInput: String) {
-        val voicePagingData = VoiceRepository.fetchVoicePaginationList(searchInput).cachedIn(viewModelScope)
-        val quotePagingData = QuoteDisplayRepository.fetchQuoteAlbumPaginationList(title = searchInput).cachedIn(viewModelScope)
-        val chatroomPagingData = ChatroomRepository.fetchChatroomPaginationList(searchInput).cachedIn(viewModelScope)
-        _searchResponse.value = listOf(
-            FlowPagingData(flow = voicePagingData, listState = listStateGroup[0]),
-            FlowPagingData(flow = quotePagingData, listState = listStateGroup[1]),
-            FlowPagingData(flow = chatroomPagingData, listState = listStateGroup[2])
-        )
+        rxLifeScope.launch({
+            val voicePagingData = VoiceRepository.fetchVoicePaginationList(searchInput).cachedIn(viewModelScope)
+            val quotePagingData = QuoteDisplayRepository.fetchQuoteAlbumPaginationList(title = searchInput).cachedIn(viewModelScope)
+            val chatroomPagingData = ChatroomRepository.fetchChatroomPaginationList(searchInput).cachedIn(viewModelScope)
+            _searchResponse.value = listOf(
+                FlowPagingData(flow = voicePagingData, listState = listStateGroup[0]),
+                FlowPagingData(flow = quotePagingData, listState = listStateGroup[1]),
+                FlowPagingData(flow = chatroomPagingData, listState = listStateGroup[2])
+            )
+        }, {
+            toast(it.message)
+        })
     }
 
     fun clearSearchResponse() {

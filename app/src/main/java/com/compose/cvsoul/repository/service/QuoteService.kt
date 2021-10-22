@@ -1,8 +1,9 @@
 package com.compose.cvsoul.repository.service
 
-import com.compose.cvsoul.repository.model.PaginationList
-import com.compose.cvsoul.repository.model.QuoteAlbumDisplayModel
-import com.compose.cvsoul.repository.model.QuoteAlbumPlaylistModel
+import com.compose.cvsoul.repository.model.*
+import kotlinx.coroutines.Dispatchers
+import rxhttp.awaitResult
+import rxhttp.flowOn
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toResponse
 
@@ -32,8 +33,10 @@ object QuoteService {
      */
     suspend fun fetchQuoteAlbumDetail(_id: String): QuoteAlbumPlaylistModel {
         return RxHttp
-            .getEncrypt("/quote/playlist/detail")
+            .get("/quote/playlist/detail")
             .addQuery("_id", _id)
+            .addHeader("ignore", "true")
+            .setDecoderEnabled(false)
             .toResponse<QuoteAlbumPlaylistModel>()
             .await()
     }

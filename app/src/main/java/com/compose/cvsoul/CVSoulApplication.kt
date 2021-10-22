@@ -49,10 +49,16 @@ class CVSoulApplication: Application() {
                 val response = GsonUtil.fromJson<Response<Any>>(encryptData, Response::class.java)
                 if (response.data != null) {
                     val key = getRawBase64Key()?.let { Base64.decode(it) }
-                    val data = String(AES.decryptAes128Cbc(Base64.decode(response.data!! as String), key!!, Padding.PKCS7Padding))
+                    val data = String(
+                        AES.decryptAes128Cbc(
+                            Base64.decode(response.data!! as String),
+                            key!!,
+                            Padding.PKCS7Padding
+                        )
+                    )
                     response.data = JsonParser.parseString(data)
                     GsonUtil.toJson(response)
-                }else {
+                } else {
                     encryptData
                 }
             }
@@ -74,7 +80,6 @@ class CVSoulApplication: Application() {
                     .addHeader("timestamp", System.currentTimeMillis().toString())
                     .addHeader("nonce", UUID.randomUUID().toString())
                     .addHeader("sessionId", sessionId)
-
 
             }
     }

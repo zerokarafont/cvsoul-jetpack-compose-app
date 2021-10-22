@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.compose.cvsoul.repository.QuoteDisplayRepository
 import com.compose.cvsoul.repository.model.CateModel
 import com.compose.cvsoul.repository.model.QuoteAlbumDisplayModel
+import com.compose.cvsoul.repository.model.QuoteAlbumPlaylistModel
 import com.compose.cvsoul.util.toast
 import kotlinx.coroutines.flow.Flow
 
@@ -32,8 +33,12 @@ class QuoteViewModel(val listState: LazyListState): ViewModel() {
     }
 
     fun fetchQuoteAlbumPaginationList(cateId: String, title: String? = null) {
-        val data = QuoteDisplayRepository.fetchQuoteAlbumPaginationList(cateId, title).cachedIn(viewModelScope)
-        _list.value = data
+        rxLifeScope.launch({
+            val data = QuoteDisplayRepository.fetchQuoteAlbumPaginationList(cateId, title).cachedIn(viewModelScope)
+            _list.value = data
+        }, {
+            toast(it.message)
+        })
     }
 
     fun changeCurrentCateId(cateId: String) {

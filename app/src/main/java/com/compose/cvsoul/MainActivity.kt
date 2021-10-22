@@ -13,10 +13,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.compose.cvsoul.repository.model.MessageEvent
 import com.compose.cvsoul.repository.model.MessageType
-import com.compose.cvsoul.ui.screen.AuthScreen
-import com.compose.cvsoul.ui.screen.MainScreen
-import com.compose.cvsoul.ui.screen.SearchScreen
+import com.compose.cvsoul.ui.screen.*
 import com.compose.cvsoul.ui.theme.CVSoulTheme
+import com.compose.cvsoul.viewmodel.QuoteDetailViewModel
+import com.compose.cvsoul.viewmodel.QuoteListByTagViewModel
 import com.compose.cvsoul.viewmodel.SearchViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import org.greenrobot.eventbus.EventBus
@@ -47,12 +47,32 @@ class MainActivity : ComponentActivity() {
                        searchListStateGroup = searchListStateGroup.plus(rememberLazyListState())
                     }
                     val searchViewModel = SearchViewModel(searchListStateGroup)
+
+                    val quoteByTagListState = rememberLazyListState()
+                    val quoteListByTagViewModel = QuoteListByTagViewModel(quoteByTagListState)
+
+                    val quoteDetailViewModel = QuoteDetailViewModel()
                     NavHost(navController = navController, startDestination = "main", route = "root") {
                         composable(route = "main") {
                             MainScreen(navController = navController)
                         }
                         composable(route = "search") { SearchScreen(navController = navController, viewModel = searchViewModel) }
                         composable(route = "auth") { AuthScreen(navController = navController) }
+                        composable(route = "quote_list_by_tag/{tagName}/{tagId}") { navBackStackEntry ->
+                            QuoteListByTagScreen(
+                                navController = navController,
+                                viewModel = quoteListByTagViewModel,
+                                tagName = navBackStackEntry.arguments?.getString("tagName")!!,
+                                tagId = navBackStackEntry.arguments?.getString("tagId")!!
+                            )
+                        }
+                        composable(route = "quote_detail/{_id}") { navBackStackEntry ->
+                            QuoteDetailScreen(
+                                navController = navController,
+                                viewModel = quoteDetailViewModel,
+                                _id = navBackStackEntry.arguments?.getString("_id")!!
+                            )
+                        }
                     }
             }
         }

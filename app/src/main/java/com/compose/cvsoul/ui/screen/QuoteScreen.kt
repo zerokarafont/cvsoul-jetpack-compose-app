@@ -1,18 +1,22 @@
 package com.compose.cvsoul.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.compose.cvsoul.repository.QuoteDisplayRepository
 import com.compose.cvsoul.ui.component.QuoteGrid
 import com.compose.cvsoul.ui.layout.SwipeRefreshLayout
 import com.compose.cvsoul.ui.layout.ViewPagerLayout
+import com.compose.cvsoul.viewmodel.QuoteDetailViewModel
 import com.compose.cvsoul.viewmodel.QuoteViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @Composable
@@ -44,7 +48,7 @@ fun QuoteScreen(navController: NavController, viewModel: QuoteViewModel) {
 
     ViewPagerLayout(tabs = cates, offscreenLimit = 2, scrollable = true, onTap = { cate, page -> handleTabChange(cate._id, page) }) { page ->
         SwipeRefreshLayout(data = collectAsLazyPagingAlbums) {
-            QuoteGrid(data = it, listState = listState)
+            QuoteGrid(navController = navController,  data = it, listState = listState)
         }
     }
 }

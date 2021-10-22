@@ -1,6 +1,5 @@
 package com.compose.cvsoul.util
 
-import android.util.Log
 import com.compose.cvsoul.repository.model.MessageEvent
 import com.compose.cvsoul.repository.model.MessageType
 import com.compose.cvsoul.util.crypto.generateRawBase64Key
@@ -26,23 +25,23 @@ open class ResponseParser<T> : TypeParser<T> {
     @Throws(IOException::class)
     override fun onParse(response: okhttp3.Response): T {
         val sessionId = response.header("sessionId")
-        if (sessionId.isNullOrEmpty()) {
-            throw Exception("sessionId不能为空")
-        }
+        if (!sessionId.isNullOrEmpty()) {
+            // 如果返回的sessionId为空 说明是非签名请求(特殊情况 暂时用于跳过某些接口timeout的问题)
+                // 如果不为空则进入下面的流程
+            if (getSessionId().isNullOrEmpty()) {
+                // 如果是第一次建立会话, 直接存入新的sessionId
+                setSessionId(sessionId)
+            }else if (sessionId == "expired") {
+                // 客户端识别到 expired 更新密钥, 告诉服务器密钥已更新, 需要服务器生成新的sessionId
+                setSessionId("update")
 
-        if (getSessionId().isNullOrEmpty()) {
-            // 如果是第一次建立会话, 直接存入新的sessionId
-            setSessionId(sessionId)
-        }else if (sessionId == "expired") {
-            // 客户端识别到 expired 更新密钥, 告诉服务器密钥已更新, 需要服务器生成新的sessionId
-            setSessionId("update")
-
-            val newKey = generateRawBase64Key()
-            // 覆盖掉原来的key
-            setRawBase64Key(newKey)
-        } else if (getSessionId() != sessionId) {
-            // 收到新的sessionId, 覆写存入新的sessionId
-            setSessionId(sessionId)
+                val newKey = generateRawBase64Key()
+                // 覆盖掉原来的key
+                setRawBase64Key(newKey)
+            } else if (getSessionId() != sessionId) {
+                // 收到新的sessionId, 覆写存入新的sessionId
+                setSessionId(sessionId)
+            }
         }
 
         val data: Response<T> = response.convertTo(Response::class, *types)

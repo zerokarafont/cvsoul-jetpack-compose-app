@@ -1,6 +1,5 @@
 package com.compose.cvsoul.util.crypto
 
-import android.util.Log
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import rxhttp.wrapper.annotation.Param
@@ -29,8 +28,8 @@ class GetEncryptParam(url: String) : NoBodyParam(url, Method.GET) {
         val encryptAppKey = generateAppKey(rawBase64Key!!)
         val sign = generateSign(paramsUrlFormat, timestamp!!, nonce!!, rawBase64Key)
 
-        addHeader("sign", sign)
         addHeader("appKey", encryptAppKey)
+        addHeader("sign", sign)
 
         return if (params.isEmpty()) simpleUrl.toHttpUrl() else "$simpleUrl?$paramsUrlFormat".toHttpUrl()
     }

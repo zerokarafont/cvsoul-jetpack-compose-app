@@ -78,7 +78,7 @@ fun SearchScreen(navController: NavController, viewModel: SearchViewModel) {
             }
 
             SearchHistory(onTap = { historyItem -> handleSearch(historyItem) })
-            Tag(data = tags,onTap = { tag -> navController.navigate(route = "quote_list_by_tag") })
+            Tag(data = tags,onTap = { (_id, name) -> navController.navigate(route = "quote_list_by_tag/$name/$_id") })
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -90,7 +90,12 @@ fun SearchScreen(navController: NavController, viewModel: SearchViewModel) {
             val quoteLazyPagingData = LazyPagingData(items = quoteLazyPagingItems.collectAsLazyPagingItems(), listState = quoteListState)
             val chatroomLazyPagingData = LazyPagingData(items = chatroomLazyPagingItems.collectAsLazyPagingItems(), listState = chatroomListState)
             Box(modifier = Modifier.padding(top = 56.dp)) {
-                SearchResult(voiceLazyPagingData, quoteLazyPagingData, chatroomLazyPagingData)
+                SearchResult(
+                    navController,
+                    voiceLazyPagingData,
+                    quoteLazyPagingData,
+                    chatroomLazyPagingData
+                )
             }
         }
     }

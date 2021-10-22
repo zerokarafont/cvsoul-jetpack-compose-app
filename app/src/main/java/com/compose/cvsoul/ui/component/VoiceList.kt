@@ -24,10 +24,6 @@ fun VoiceListItem(item: VoiceModel) {
         .padding(5.dp)
         .fillMaxWidth()) {
         Column {
-            Text(text = item.translate)
-        }
-        Spacer(modifier = Modifier.height(5.dp))
-        Column {
             Text(text = item.text)
         }
     }

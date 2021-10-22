@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    compileSdk 30
+    compileSdk 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.compose.cvsoul"
         minSdk 26
-        targetSdk 30
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -51,7 +51,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.5.10'
     }
     packagingOptions {
         exclude 'META-INF/io.netty.versions.properties'
@@ -66,7 +65,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
 
     // compose
-    implementation 'androidx.activity:activity-compose:1.3.0'
+    implementation 'androidx.activity:activity-compose:1.3.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
@@ -88,13 +87,13 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
 
     // navigation
-    implementation "androidx.navigation:navigation-compose:2.4.0-alpha05"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha09"
 
     // lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-beta01"
 
     // room
     implementation "androidx.room:room-runtime:$room_version"
@@ -106,11 +105,11 @@ dependencies {
     implementation "androidx.paging:paging-compose:1.0.0-alpha12"
 
     // network
-    implementation 'com.github.liujingxing.rxhttp:rxhttp:2.6.4'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.github.liujingxing.rxhttp:rxhttp:2.6.8'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
     implementation 'com.github.liujingxing.rxlife:rxlife-coroutine:2.1.0'
-    implementation 'com.github.liujingxing.rxhttp:converter-protobuf:2.6.4'
-    kapt 'com.github.liujingxing.rxhttp:rxhttp-compiler:2.6.4'
+    implementation 'com.github.liujingxing.rxhttp:converter-protobuf:2.6.8'
+    kapt 'com.github.liujingxing.rxhttp:rxhttp-compiler:2.6.8'
 
     // eventbus
     implementation "org.greenrobot:eventbus:$eventbus_version"

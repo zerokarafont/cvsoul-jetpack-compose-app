@@ -13,3 +13,7 @@
         同级screen之间navigate跳转无法保存状态
     - [x] 方案一: 将viewmodel的创建提升到最近的父NavHost之外, 这样不会受到导航切换的影响
     - [x] 方案二?: **未验证**使用Hilt依赖注入viewmodel
+  - [okhttp接口超时问题](https://github.com/square/okhttp/issues/3974)
+    + ~~fetchQuoteAlbumDetail接口一直超时, 经过测试如果debugger时停留nonce过期时长(例如现在是60秒),再放行debugger后端才能收到响应~~
+    + []在GetEncryptParam类中, 当同时设置appKey和sign的header时，会出现fetchQuoteAlbumDetail超时, 如果注释掉任意一个header则不会出现超时
+        + 临时解决方案: 在Service层对此接口单独设置一个自定义的header , 让后端忽略合法性(重放和签名校验等)验证

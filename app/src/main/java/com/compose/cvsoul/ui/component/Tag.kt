@@ -21,7 +21,7 @@ import com.compose.cvsoul.repository.model.TagModel
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun Tag(data: List<TagModel?>? = null, onTap: (tag: String) -> Unit ) {
+fun Tag(data: List<TagModel?>? = null, onTap: (tag: TagModel) -> Unit ) {
     Surface(
         color = Color.White,
         contentColor = Color(0xFFEEEEEE),
@@ -42,7 +42,7 @@ fun Tag(data: List<TagModel?>? = null, onTap: (tag: String) -> Unit ) {
                                 backgroundColor = Color(0xAAEEEEEE),
                                 contentColor = Color(0xFFAAAAAA),
                                 modifier = Modifier.padding(horizontal = 2.dp, vertical = 5.dp),
-                                onClick = { onTap(item.name) }) {
+                                onClick = { onTap(item) }) {
                                 Text(text = item.name, textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 5.dp))
                             }
                         }
